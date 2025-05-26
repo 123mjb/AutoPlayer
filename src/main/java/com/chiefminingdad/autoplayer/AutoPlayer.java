@@ -22,6 +22,7 @@ public class AutoPlayer implements ModInitializer {
 		// Proceed with mild caution.
 
 		ModItems.initialize();
+		DND.initialize();
 
 		LOGGER.info("Hello Fabric world!");
 	}
