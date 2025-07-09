@@ -3,7 +3,7 @@
 	"package": "com.chiefminingdad.autoplayer.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"ExampleClientMixin"
+		"DeclaringVariablesInTick"
 	],
 	"injectors": {
 		"defaultRequire": 1
