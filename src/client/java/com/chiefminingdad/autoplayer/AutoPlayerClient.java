@@ -8,8 +8,10 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class AutoPlayerClient implements ClientModInitializer {
+	MoveUntil moveUntil = new MoveUntil();
 
 	@Override
 	public void onInitializeClient() {
@@ -17,29 +19,24 @@ public class AutoPlayerClient implements ClientModInitializer {
 		ScreenManager screenManager = new ScreenManager();
 		screenManager.init();
 
-		KeyBinding StartMovingKeyBind = KeyBindingBuilder.BuildKeyBind("StartMoving", true, GLFW.GLFW_KEY_J, "movecontroller");
-
 		AtomicBoolean MoveForwards = new AtomicBoolean(false);
 		AtomicInteger TimeLeft = new AtomicInteger();
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (StartMovingKeyBind.wasPressed()) {
-				if (!MoveForwards.get()){ MoveForwards.set(true);
-					TimeLeft.set(40);
-				}
-
+		KeyBindingBuilder.KeyBindtoRunningCode  Move2Secs= new KeyBindingBuilder.KeyBindtoRunningCode("StartMoving", true, GLFW.GLFW_KEY_J, "movecontroller",(Consumer<KeyBinding>)  (keyBinding -> {if (keyBinding.wasPressed()) {
+			if (!MoveForwards.get()){ MoveForwards.set(true);
+				TimeLeft.set(40);
 			}
-			if (MoveForwards.get()){
-				if(TimeLeft.get()==0){
-					MoveForwards.set(false);
-					MinecraftClient.getInstance().options.forwardKey.setPressed(false);
-				}
-				else{
-					MinecraftClient.getInstance().options.forwardKey.setPressed(true);
-					TimeLeft.set(TimeLeft.get()-1);
-				}
+
+		};if (MoveForwards.get()){
+			if(TimeLeft.get()==0){
+				MoveForwards.set(false);
+				MinecraftClient.getInstance().options.forwardKey.setPressed(false);
 			}
-		});
+			else{
+				MinecraftClient.getInstance().options.forwardKey.setPressed(true);
+				TimeLeft.set(TimeLeft.get()-1);
+			}
+		}}));
 
-
+		moveUntil.init(moveUntil);
 	}
 }
