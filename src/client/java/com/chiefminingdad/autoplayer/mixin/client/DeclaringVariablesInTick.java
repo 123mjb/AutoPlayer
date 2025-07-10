@@ -9,8 +9,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientTickEvents.class)
 public class DeclaringVariablesInTick {
-	@Inject(at = @At("HEAD"), method = "run")
+	@Inject(at = @At("CTOR_HEAD"), method = "<init>")
 	private void init(CallbackInfo info) {
-		// This code is injected into the start of MinecraftClient.run()V
+		// This code is injected into the start of CientTickEvents.<init>()V
+		Double this.rotation
 	}
 }

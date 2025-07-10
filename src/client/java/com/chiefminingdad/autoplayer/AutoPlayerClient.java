@@ -38,5 +38,7 @@ public class AutoPlayerClient implements ClientModInitializer {
 				}
 			}
 		});
+
+
 	}
 }
