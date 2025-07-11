@@ -1,27 +1,30 @@
 package com.chiefminingdad.autoplayer;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.function.Consumer;
+
+import static com.chiefminingdad.autoplayer.KeyBindingBuilder.*;
+
 public class ScreenManager {
-    KeyBinding keyBindingTest;
+    KeyBindtoRunningCode keyBindingTest;
 
     protected void init(){
-        // make keybind
-        keyBindingTest = KeyBindingBuilder.BuildKeyBind("test", true, GLFW.GLFW_KEY_V, "test");
 
         // make the keybind show the screen
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (keyBindingTest.wasPressed()) {
+        Consumer<KeyBinding> Code = keyBinding->{
+            if (keyBinding.wasPressed()) {
                 Screen currentScreen = MinecraftClient.getInstance().currentScreen;
                 MinecraftClient.getInstance().setScreen(
                         new CustomScreen(Text.empty(), currentScreen)
                 );
             }
-        });
+        };
+
+        keyBindingTest = new KeyBindtoRunningCode("test", true, GLFW.GLFW_KEY_V, "test", Code);
     }
 }
