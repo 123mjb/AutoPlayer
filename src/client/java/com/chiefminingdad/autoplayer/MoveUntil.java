@@ -1,9 +1,11 @@
 package com.chiefminingdad.autoplayer;
 
+import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.server.command.ServerCommandSource;
 
 public class MoveUntil {
     public MinecraftClient Instance;
@@ -47,6 +49,10 @@ public class MoveUntil {
             }
             else this.Move = false;
         }
+
+    }
+
+    public void CommandMove(CommandContext<ServerCommandSource> ctx){
 
     }
 
