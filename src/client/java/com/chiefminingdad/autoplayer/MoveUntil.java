@@ -22,8 +22,10 @@ public class MoveUntil {
         if (MinecraftClient.getInstance()!=null) {
             Instance = MinecraftClient.getInstance();
             player = Instance.player;
-            Jump =Instance.options.jumpKey;
-            Forwards = Instance.options.forwardKey;
+            if (Instance.options!=null) {
+                Jump = Instance.options.jumpKey;
+                Forwards = Instance.options.forwardKey;
+            }
         }
     }
 
