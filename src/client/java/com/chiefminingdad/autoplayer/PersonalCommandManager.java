@@ -13,11 +13,11 @@ public class PersonalCommandManager {
 
     public static void Register(String Name, Function<CommandContext<ServerCommandSource>, Integer> code) {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment)-> dispatcher.register(literal(Name).
-                then(argument("x", IntegerArgumentType.integer())
-                        .then(argument("y", IntegerArgumentType.integer())
-                                .then(argument("z", IntegerArgumentType.integer())).executes(code::apply)
-                        ).executes(code::apply)
-                ).executes(code::apply)
+                then(argument("x", IntegerArgumentType.integer()).executes(code::apply)
+                        .then(argument("y", IntegerArgumentType.integer()).executes(code::apply)
+                                .then(argument("z", IntegerArgumentType.integer()).executes(code::apply))
+                        )
+                )
         ));
     }
 }

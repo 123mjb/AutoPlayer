@@ -48,10 +48,10 @@ public class AutoPlayerClient implements ClientModInitializer {
 				z = IntegerArgumentType.getInteger(serverCommandSourceCommandContext, "z");
 			}
 			catch(Exception e) {
-				return 0;
+				return 1;
 			}
 			serverCommandSourceCommandContext.getSource().sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(x,y,z)),false);
-			return x * y * z;
+			return 1;
         });
 
 
