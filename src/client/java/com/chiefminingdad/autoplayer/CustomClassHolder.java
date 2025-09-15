@@ -7,19 +7,19 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import java.util.Optional;
 
 public class CustomClassHolder {
-    public class DesiredLocationArgumentType implements ArgumentType<Integer[]> {
+    public static class DesiredLocationArgumentType implements ArgumentType<Integer[]> {
         @Override
         public Integer[] parse(StringReader reader) throws CommandSyntaxException {
-            Optional<Integer> x;
-            Optional<Integer> y;
-            Optional<Integer> z;
+            Integer x;
+            Integer y;
+            Integer z;
             String location = reader.readUnquotedString();
             String[] split = location.split(",");
             x = !split[0].isEmpty()?Integer.parseInt(split[0]):null;
-            y = Integer.parseInt(split[1]);
-            z = Integer.parseInt(split[2]);
+            y = !split[1].isEmpty()?Integer.parseInt(split[1]):null;
+            z = !split[2].isEmpty()?Integer.parseInt(split[2]):null;
 
-            return new Integer[]{x!=?x:null, y, z};
+            return new Integer[] {x,y,z};
 
         }
     }

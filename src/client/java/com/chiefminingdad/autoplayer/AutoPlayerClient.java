@@ -2,8 +2,11 @@ package com.chiefminingdad.autoplayer;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,6 +22,11 @@ public class AutoPlayerClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		ArgumentTypeRegistry.registerArgumentType(
+				Identifier.of("fabric-docs", "location_pos"),
+				CustomClassHolder.DesiredLocationArgumentType.class,
+				ConstantArgumentSerializer.of(CustomClassHolder.DesiredLocationArgumentType::new)
+		);
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 
 		this.screenManager.init();
