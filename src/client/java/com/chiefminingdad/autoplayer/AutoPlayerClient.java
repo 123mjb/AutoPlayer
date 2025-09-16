@@ -5,6 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import com.chiefminingdad.autoplayer.CustomClassHolder.DesiredLocationArgumentType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -22,11 +23,11 @@ public class AutoPlayerClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		ArgumentTypeRegistry.registerArgumentType(
-				Identifier.of("fabric-docs", "location_pos"),
-				CustomClassHolder.DesiredLocationArgumentType.class,
-				ConstantArgumentSerializer.of(CustomClassHolder.DesiredLocationArgumentType::new)
-		);
+//		ArgumentTypeRegistry.registerArgumentType(
+//				Identifier.of("fabric-docs", "location_pos"),
+//				CustomClassHolder.DesiredLocationArgumentType.class,
+//				ConstantArgumentSerializer.of(CustomClassHolder.DesiredLocationArgumentType::new)
+//		);
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 
 		this.screenManager.init();
@@ -49,16 +50,14 @@ public class AutoPlayerClient implements ClientModInitializer {
 		this.moveUntil.init(this.moveUntil);
 
 		PersonalCommandManager.Register("moveto", serverCommandSourceCommandContext -> {
-			int x,y,z;
+			Integer[] locs;
 			try {
-				x = IntegerArgumentType.getInteger(serverCommandSourceCommandContext, "x");
-				y = IntegerArgumentType.getInteger(serverCommandSourceCommandContext, "y");
-				z = IntegerArgumentType.getInteger(serverCommandSourceCommandContext, "z");
+				locs = serverCommandSourceCommandContext.getArgument("locs",Integer[].class);
 			}
 			catch(Exception e) {
 				return 1;
 			}
-			serverCommandSourceCommandContext.getSource().sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(x,y,z)),false);
+			serverCommandSourceCommandContext.getSource().sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(locs[0],locs[1],locs[2])),false);
 			return 1;
         });
 
