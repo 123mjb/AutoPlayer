@@ -13,6 +13,19 @@ public class CustomClassHolder {
             Integer z;
             String location = reader.readUnquotedString();
             String[] split = location.split(",");
+
+//            String string = reader.readString();
+//
+//            string = string.replace("{", "").replace("}", "");
+//
+//
+//            String[] split = string.split(",");
+//
+//
+//            int x = Integer.parseInt(split[0].trim());
+//            int y = Integer.parseInt(split[1].trim());
+//            int z = Integer.parseInt(split[2].trim());
+
             x = !split[0].isEmpty()?Integer.parseInt(split[0]):null;
             y = !split[1].isEmpty()?Integer.parseInt(split[1]):null;
             z = !split[2].isEmpty()?Integer.parseInt(split[2]):null;

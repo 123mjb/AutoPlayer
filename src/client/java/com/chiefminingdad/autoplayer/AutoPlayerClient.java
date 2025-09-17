@@ -1,13 +1,8 @@
 package com.chiefminingdad.autoplayer;
 
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
-import com.chiefminingdad.autoplayer.CustomClassHolder.DesiredLocationArgumentType;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -57,7 +52,19 @@ public class AutoPlayerClient implements ClientModInitializer {
 			catch(Exception e) {
 				return 1;
 			}
-			serverCommandSourceCommandContext.getSource().sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(locs[0],locs[1],locs[2])),false);
+			var source = serverCommandSourceCommandContext.getSource();
+			for(int i=0;i<locs.length;i++) {
+				try {
+					int finalI = i;
+					source.sendFeedback(() -> Text.literal("%s:%s".formatted(finalI,locs[finalI])), true);
+				}
+				catch (Exception e)
+				{
+					int finalI1 = i;
+					source.sendFeedback(() -> Text.literal("%s".formatted(finalI1)),true);
+				}
+			}
+			source.sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(locs[0]!=null?locs[0]:"null",locs[1]!=null?locs[1]:"null",locs[2]!=null?locs[2]:"null")),false);
 			return 1;
         });
 
