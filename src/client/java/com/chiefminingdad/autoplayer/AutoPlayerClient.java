@@ -27,6 +27,7 @@ public class AutoPlayerClient implements ClientModInitializer {
 
 		this.screenManager.init();
 
+
 		AtomicBoolean MoveForwards = new AtomicBoolean(false);
 		AtomicInteger TimeLeft = new AtomicInteger();
 		this.Move2Secs= new KeyBindtoRunningCode("StartMoving", true, GLFW.GLFW_KEY_J, "movecontroller", keyBinding -> {if (keyBinding.wasPressed()) {if (!MoveForwards.get()){ MoveForwards.set(true);
