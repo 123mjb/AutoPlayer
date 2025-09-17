@@ -8,27 +8,24 @@ public class CustomClassHolder {
     public static class DesiredLocationArgumentType implements ArgumentType<Integer[]> {
         @Override
         public Integer[] parse(StringReader reader) throws CommandSyntaxException {
-            Integer x;
-            Integer y;
-            Integer z;
-            String location = reader.readUnquotedString();
-            String[] split = location.split(",");
+//            String location = reader.readUnquotedString();
+//            String[] split = location.split(",");
 
-//            String string = reader.readString();
+            String string = reader.readString();
 //
-//            string = string.replace("{", "").replace("}", "");
+            string = string.replace("{", "").replace("}", "");
 //
 //
-//            String[] split = string.split(",");
+            String[] split = string.split(",");
 //
 //
 //            int x = Integer.parseInt(split[0].trim());
 //            int y = Integer.parseInt(split[1].trim());
 //            int z = Integer.parseInt(split[2].trim());
 
-            x = !split[0].isEmpty()?Integer.parseInt(split[0]):null;
-            y = !split[1].isEmpty()?Integer.parseInt(split[1]):null;
-            z = !split[2].isEmpty()?Integer.parseInt(split[2]):null;
+            int x = !split[0].isEmpty()?Integer.parseInt(split[0]):null;
+            int y = !split[1].isEmpty()?Integer.parseInt(split[1]):null;
+            int z = !split[2].isEmpty()?Integer.parseInt(split[2]):null;
 
             return new Integer[] {x,y,z};
 
