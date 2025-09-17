@@ -65,7 +65,7 @@ public class AutoPlayerClient implements ClientModInitializer {
 					source.sendFeedback(() -> Text.literal("%s".formatted(finalI1)),true);
 				}
 			}
-			source.sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(locs[0]!=null?locs[0]:"null",locs[1]!=null?locs[1]:"null",locs[2]!=null?locs[2]:"null")),false);
+			source.sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(locs[0],locs[1],locs[2])),false);
 			return 1;
         });
 
