@@ -56,7 +56,7 @@ public class AutoPlayerClient implements ClientModInitializer {
 			for(int i=0;i<locs.length();i++) {
 				try {
 					int finalI = i;
-					source.sendFeedback(() -> Text.literal("%s:%s".formatted(finalI,locs[finalI])), true);
+                    source.sendFeedback(() -> Text.literal("%s:%s".formatted(finalI,locs.getitem(finalI))), true);
 				}
 				catch (Exception e)
 				{
@@ -64,7 +64,7 @@ public class AutoPlayerClient implements ClientModInitializer {
 					source.sendFeedback(() -> Text.literal("%s".formatted(finalI1)),true);
 				}
 			}
-			source.sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(locs[0],locs[1],locs[2])),false);
+			source.sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(locs.X,locs.Y,locs.Z)),false);
 			return 1;
         });
 
