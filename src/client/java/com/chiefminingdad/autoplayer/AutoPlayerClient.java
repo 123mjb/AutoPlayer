@@ -27,7 +27,6 @@ public class AutoPlayerClient implements ClientModInitializer {
 
 		this.screenManager.init();
 
-
 		AtomicBoolean MoveForwards = new AtomicBoolean(false);
 		AtomicInteger TimeLeft = new AtomicInteger();
 		this.Move2Secs= new KeyBindtoRunningCode("StartMoving", true, GLFW.GLFW_KEY_J, "movecontroller", keyBinding -> {if (keyBinding.wasPressed()) {if (!MoveForwards.get()){ MoveForwards.set(true);
@@ -54,7 +53,7 @@ public class AutoPlayerClient implements ClientModInitializer {
 				return 1;
 			}
 			var source = serverCommandSourceCommandContext.getSource();
-			for(int i=0;i<locs.length;i++) {
+			for(int i=0;i<locs.length();i++) {
 				try {
 					int finalI = i;
 					source.sendFeedback(() -> Text.literal("%s:%s".formatted(finalI,locs[finalI])), true);

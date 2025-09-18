@@ -15,8 +15,11 @@ public class CustomClassHolder {
         public DesiredLocation(int x,int y, int z){
             X=x;Y=y;Z=z;
         }
+        public int getindex(int index){
+            return index>0?(index==1?Y:Z):X;
+        }
 
-        public int length =()-> {};
+        public int length(){return 3;}
     }
 
     public static class DesiredLocationArgumentType implements ArgumentType<DesiredLocation> {
