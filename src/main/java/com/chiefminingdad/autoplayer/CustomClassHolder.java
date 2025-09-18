@@ -5,9 +5,23 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 public class CustomClassHolder {
-    public static class DesiredLocationArgumentType implements ArgumentType<Integer[]> {
+    public static class DesiredLocation{
+        public int X,Y,Z;
+        public boolean AddX = false,AddY = false,AddZ = false;
+        public DesiredLocation(int x,int y, int z,boolean addx,boolean addy,boolean addz){
+            X=x;Y=y;Z=z;
+            AddX=addx;AddY=addy;AddZ=addz;
+        }
+        public DesiredLocation(int x,int y, int z){
+            X=x;Y=y;Z=z;
+        }
+
+        public int length =()-> {};
+    }
+
+    public static class DesiredLocationArgumentType implements ArgumentType<DesiredLocation> {
         @Override
-        public Integer[] parse(StringReader reader) throws CommandSyntaxException {
+        public DesiredLocation parse(StringReader reader) throws CommandSyntaxException {
 //            String location = reader.readUnquotedString();
             int x,y,z;
 
@@ -18,7 +32,7 @@ public class CustomClassHolder {
             try{y = Integer.parseInt(split[1]);} catch(Exception e) {y = Integer.MAX_VALUE;}
             try{z = Integer.parseInt(split[2]);} catch(Exception e) {z = Integer.MAX_VALUE;}
 
-            return new Integer[] {x,y,z};
+            return new DesiredLocation(x,y,z);
 
         }
     }

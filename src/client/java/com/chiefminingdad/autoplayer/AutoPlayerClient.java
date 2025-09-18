@@ -7,7 +7,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
+import com.chiefminingdad.autoplayer.CustomClassHolder.*;
 import static com.chiefminingdad.autoplayer.KeyBindingBuilder.*;
 
 public class AutoPlayerClient implements ClientModInitializer {
@@ -46,9 +46,9 @@ public class AutoPlayerClient implements ClientModInitializer {
 		this.moveUntil.init(this.moveUntil);
 
 		PersonalCommandManager.Register("moveto", serverCommandSourceCommandContext -> {
-			Integer[] locs;
+			DesiredLocation locs;
 			try {
-				locs = serverCommandSourceCommandContext.getArgument("locs",Integer[].class);
+				locs = serverCommandSourceCommandContext.getArgument("locs", DesiredLocation.class);
 			}
 			catch(Exception e) {
 				return 1;
