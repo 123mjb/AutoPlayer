@@ -54,14 +54,13 @@ public class AutoPlayerClient implements ClientModInitializer {
 			}
 			var source = serverCommandSourceCommandContext.getSource();
 			for(int i=0;i<locs.length();i++) {
+                int finalI = i;
 				try {
-					int finalI = i;
                     source.sendFeedback(() -> Text.literal("%s:%s".formatted(finalI,locs.getitem(finalI))), true);
 				}
 				catch (Exception e)
 				{
-					int finalI1 = i;
-					source.sendFeedback(() -> Text.literal("%s".formatted(finalI1)),true);
+					source.sendFeedback(() -> Text.literal("%s".formatted(finalI)),true);
 				}
 			}
 			source.sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(locs.X,locs.Y,locs.Z)),false);
