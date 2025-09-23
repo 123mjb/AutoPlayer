@@ -6,6 +6,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
+import com.chiefminingdad.autoplayer.CustomClassHolder.*;
+import org.lwjgl.glfw.GLFW;
 
 public class MoveUntil {
     public MinecraftClient Instance;
@@ -14,9 +17,9 @@ public class MoveUntil {
     public KeyBinding Forwards;
     public boolean Move = false;
     public float desiredRotation;
-	public int desiredX;
-	public int desiredY;
-	public int desiredZ;
+	public int desiredX=Integer.MAX_VALUE;
+	public int desiredY=Integer.MAX_VALUE;
+	public int desiredZ=Integer.MAX_VALUE;
 
     MoveUntil(){
         if (MinecraftClient.getInstance()!=null) {
@@ -27,18 +30,62 @@ public class MoveUntil {
                 Forwards = Instance.options.forwardKey;
             }
         }
+        InitKeybind();
+        InitCommand();
+
+    }
+
+    private void InitKeybind(){
+        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleMoving", true, GLFW.GLFW_KEY_J, "movecontroller", keyBinding -> {
+            this.Move = !this.Move;
+        });
+    }
+
+    private void InitCommand(){
+        PersonalCommandManager.Register("moveto", serverCommandSourceCommandContext -> {
+            DesiredLocation locs;
+            try {
+                locs = serverCommandSourceCommandContext.getArgument("locs", DesiredLocation.class);
+            }
+            catch(Exception e) {
+                return 1;
+            }
+            var source = serverCommandSourceCommandContext.getSource();
+            for(int i=0;i<locs.length();i++) {
+                int finalI = i;
+                try {
+                    source.sendFeedback(() -> Text.literal("%s:%s".formatted(finalI,locs.getitem(finalI))), true);
+                }
+                catch (Exception e)
+                {
+                    source.sendFeedback(() -> Text.literal("%s".formatted(finalI)),true);
+                }
+            }
+            source.sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(locs.X,locs.Y,locs.Z)),false);
+            SetVars(locs.X,locs.Y,locs.Z);
+            return 1;
+        });
     }
 
     public void init(MoveUntil moveUntil){
         ClientTickEvents.END_CLIENT_TICK.register(client -> moveUntil.MoveCorrectDirection());
     }
 
-    public void SetVars(int x,int y,int z, float rot){
+    public void SetVars() {
+        SetVars(0, 0, 0, 0.0F);
+    }
+
+    public void SetVars(int x, int y, int z, float rot){
         this.desiredRotation = rot;
         this.desiredX = x;
         this.desiredY = y;
         this.desiredZ = z;
-
+    }
+    public void SetVars(int x,int y,int z){
+        this.desiredRotation = 0;
+        this.desiredX = x;
+        this.desiredY = y;
+        this.desiredZ = z;
     }
 
     public void MoveCorrectDirection(){
@@ -53,9 +100,4 @@ public class MoveUntil {
         }
 
     }
-
-    public void CommandMove(CommandContext<ServerCommandSource> ctx){
-
-    }
-
 }

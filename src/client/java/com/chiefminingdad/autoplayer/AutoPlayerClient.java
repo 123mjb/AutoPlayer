@@ -2,12 +2,10 @@ package com.chiefminingdad.autoplayer;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import com.chiefminingdad.autoplayer.CustomClassHolder.*;
 import static com.chiefminingdad.autoplayer.KeyBindingBuilder.*;
 
 public class AutoPlayerClient implements ClientModInitializer {
@@ -29,9 +27,17 @@ public class AutoPlayerClient implements ClientModInitializer {
 
 		AtomicBoolean MoveForwards = new AtomicBoolean(false);
 		AtomicInteger TimeLeft = new AtomicInteger();
-		this.Move2Secs= new KeyBindtoRunningCode("StartMoving", true, GLFW.GLFW_KEY_J, "movecontroller", keyBinding -> {if (keyBinding.wasPressed()) {if (!MoveForwards.get()){ MoveForwards.set(true);
-				TimeLeft.set(40);
-			}}if (MoveForwards.get()){
+		this.Move2Secs= new KeyBindtoRunningCode("StartMoving", true, GLFW.GLFW_KEY_J, "movecontroller", keyBinding -> {
+			if (keyBinding.wasPressed())
+			{
+				if (!MoveForwards.get())
+				{
+					MoveForwards.set(true);
+					TimeLeft.set(40);
+				}
+			}
+			if (MoveForwards.get())
+			{
 			if(TimeLeft.get()==0){
 				MoveForwards.set(false);
 				MinecraftClient.getInstance().options.forwardKey.setPressed(false);
@@ -44,28 +50,7 @@ public class AutoPlayerClient implements ClientModInitializer {
 
 		this.moveUntil.init(this.moveUntil);
 
-		PersonalCommandManager.Register("moveto", serverCommandSourceCommandContext -> {
-			DesiredLocation locs;
-			try {
-				locs = serverCommandSourceCommandContext.getArgument("locs", DesiredLocation.class);
-			}
-			catch(Exception e) {
-				return 1;
-			}
-			var source = serverCommandSourceCommandContext.getSource();
-			for(int i=0;i<locs.length();i++) {
-                int finalI = i;
-				try {
-                    source.sendFeedback(() -> Text.literal("%s:%s".formatted(finalI,locs.getitem(finalI))), true);
-				}
-				catch (Exception e)
-				{
-					source.sendFeedback(() -> Text.literal("%s".formatted(finalI)),true);
-				}
-			}
-			source.sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(locs.X,locs.Y,locs.Z)),false);
-			return 1;
-        });
+
 
 
 	}
