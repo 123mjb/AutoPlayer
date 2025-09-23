@@ -1,11 +1,9 @@
 package com.chiefminingdad.autoplayer;
 
-import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import com.chiefminingdad.autoplayer.CustomClassHolder.*;
 import org.lwjgl.glfw.GLFW;
@@ -36,9 +34,7 @@ public class MoveUntil {
     }
 
     private void InitKeybind(){
-        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleMoving", true, GLFW.GLFW_KEY_J, "movecontroller", keyBinding -> {
-            this.Move = !this.Move;
-        });
+        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleMoving", true, GLFW.GLFW_KEY_J, "movecontroller", keyBinding -> this.Move = !this.Move);
     }
 
     private void InitCommand(){
@@ -71,6 +67,10 @@ public class MoveUntil {
         ClientTickEvents.END_CLIENT_TICK.register(client -> moveUntil.MoveCorrectDirection());
     }
 
+    /**
+     * Default Values:
+     * 0, 0, 0, 0.0F
+     */
     public void SetVars() {
         SetVars(0, 0, 0, 0.0F);
     }
