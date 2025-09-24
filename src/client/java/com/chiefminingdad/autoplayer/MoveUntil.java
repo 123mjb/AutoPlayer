@@ -19,14 +19,12 @@ public class MoveUntil {
 	public int desiredY=Integer.MAX_VALUE;
 	public int desiredZ=Integer.MAX_VALUE;
 
-    MoveUntil(){
-        if (MinecraftClient.getInstance()!=null) {
-            Instance = MinecraftClient.getInstance();
-            player = Instance.player;
-            if (Instance.options!=null) {
-                Jump = Instance.options.jumpKey;
-                Forwards = Instance.options.forwardKey;
-            }
+    MoveUntil(MinecraftClient client, ClientPlayerEntity Player){
+        Instance = client;
+        player = Player;
+        if (Instance.options!=null) {
+            Jump = Instance.options.jumpKey;
+            Forwards = Instance.options.forwardKey;
         }
         InitKeybind();
         InitCommand();
