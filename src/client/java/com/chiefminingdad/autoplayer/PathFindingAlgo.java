@@ -5,6 +5,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Stack;
+
 public class PathFindingAlgo {
     ClientPlayerEntity player;
     World CurrentWorld;
@@ -14,6 +16,7 @@ public class PathFindingAlgo {
     int X,Y,Z;
 
     BlockPos[] PathBlocks = new BlockPos[] {};
+    Stack<BlockPos> PathStack = new Stack<>();
 
     public PathFindingAlgo(ClientPlayerEntity Player, World world){
         player = Player;
@@ -34,6 +37,12 @@ public class PathFindingAlgo {
         FoundPath  = false;
     }
 
+    /**
+     * @param locs
+     * Array of all the blocks on the path.
+     * @return
+     * The minimum distance from the player to the supplied path.
+     */
     public double DistanceFromPlayerToPath(BlockPos @NotNull [] locs){
         double d = Double.MAX_VALUE;
         for (BlockPos loc : locs) {
