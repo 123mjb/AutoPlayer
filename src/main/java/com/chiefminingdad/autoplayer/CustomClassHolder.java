@@ -3,6 +3,7 @@ package com.chiefminingdad.autoplayer;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import org.jetbrains.annotations.NotNull;
 
 public class CustomClassHolder {
     public static class DesiredLocation{
@@ -12,7 +13,7 @@ public class CustomClassHolder {
             X=x;Y=y;Z=z;
             AddX= addX;AddY= addY;AddZ= addZ;
         }
-        public DesiredLocation(int x, int y, int z, boolean[] adds){
+        public DesiredLocation(int x, int y, int z, boolean @NotNull [] adds){
             X=x;Y=y;Z=z;
             AddX= adds[0];AddY= adds[1];AddZ= adds[2];
         }
@@ -28,7 +29,7 @@ public class CustomClassHolder {
 
     public static class DesiredLocationArgumentType implements ArgumentType<DesiredLocation> {
         @Override
-        public DesiredLocation parse(StringReader reader) throws CommandSyntaxException {
+        public DesiredLocation parse(@NotNull StringReader reader) throws CommandSyntaxException {
 //            String location = reader.readUnquotedString();
             int x,y,z;
             boolean[] adds = new  boolean[]{false,false,false};
