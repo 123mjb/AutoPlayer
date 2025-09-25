@@ -65,5 +65,6 @@ public class PathFindingAlgo {
         return mag(x-BP.getX(),y-BP.getY(),z-BP.getZ());
     }
 
+    
 
 }
