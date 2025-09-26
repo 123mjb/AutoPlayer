@@ -11,6 +11,8 @@ public class PathFindingAlgo {
     ClientPlayerEntity player;
     World CurrentWorld;
 
+    BlockManager blockManager;
+
     boolean FindingPath = false;
     boolean FoundPath = false;
     int X,Y,Z;
@@ -21,6 +23,7 @@ public class PathFindingAlgo {
     public PathFindingAlgo(ClientPlayerEntity Player, World world){
         player = Player;
         CurrentWorld=world;
+        blockManager = new BlockManager(CurrentWorld);
     }
 
     /**
@@ -61,9 +64,13 @@ public class PathFindingAlgo {
         return Math.sqrt(x*x+y*y+z*z);
     }
 
-    private double distancefromxyztoblockpos(double x, double y, double z, @NotNull BlockPos BP){
+    private double distanceFromXYZtoBlockPos(double x, double y, double z, @NotNull BlockPos BP){
         return mag(x-BP.getX(),y-BP.getY(),z-BP.getZ());
     }
+
+
+
+
 
     
 
