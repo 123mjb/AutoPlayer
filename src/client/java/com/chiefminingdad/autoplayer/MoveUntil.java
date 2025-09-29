@@ -9,8 +9,8 @@ import com.chiefminingdad.autoplayer.CustomClassHolder.*;
 import org.lwjgl.glfw.GLFW;
 
 public class MoveUntil {
-    public final MinecraftClient Instance;
-    public final ClientPlayerEntity player;
+    public final MinecraftClient Instance = null;
+    public ClientPlayerEntity player;
     public KeyBinding Jump;
     public KeyBinding Forwards;
     public boolean Move = false;
@@ -19,10 +19,20 @@ public class MoveUntil {
 	public int desiredY=Integer.MAX_VALUE;
 	public int desiredZ=Integer.MAX_VALUE;
 
+    public KeyBinding getJump(){
+        if(Jump==null){
+            Jump = Instance.options.jumpKey;
+        }return Jump;
+    }
+
     MoveUntil(MinecraftClient client, ClientPlayerEntity Player){
         Instance = client;
         player = Player;
+        if (player == null){
+            player = Instance.player;
+        }
         if (Instance.options!=null) {
+
             Jump = Instance.options.jumpKey;
             Forwards = Instance.options.forwardKey;
         }
@@ -30,6 +40,7 @@ public class MoveUntil {
         InitCommand();
 
     }
+
 
     private void InitKeybind(){
         new KeyBindingBuilder.KeyBindtoRunningCode("ToggleMoving", GLFW.GLFW_KEY_J, "movecontroller", keyBinding -> this.Move = !this.Move);
@@ -87,14 +98,17 @@ public class MoveUntil {
     }
 
     public void MoveCorrectDirection(){
-        if (this.Move) {
-            player.setYaw(this.desiredRotation);
+        if (player!=null) {
+            if (this.Move) {
+                player.setYaw(this.desiredRotation);
 
-            if (desiredX != player.getX() | desiredY != player.getY() | desiredZ != player.getZ()) {
-                Jump.setPressed(desiredY > player.getY());
-                Forwards.setPressed(desiredX != player.getX() | desiredZ != player.getZ());
+                if (desiredX != player.getX() | desiredY != player.getY() | desiredZ != player.getZ()) {
+                    getJump().setPressed(desiredY > player.getY());
+                    Forwards.setPressed(desiredX != player.getX() | desiredZ != player.getZ());
+                } else this.Move = false;
             }
-            else this.Move = false;
+        }else{
+            player = Instance.player;
         }
 
     }
