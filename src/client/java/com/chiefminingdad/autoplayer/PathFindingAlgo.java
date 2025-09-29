@@ -8,10 +8,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Stack;
 
 public class PathFindingAlgo {
-    ClientPlayerEntity player;
-    World CurrentWorld;
+    final ClientPlayerEntity player;
+    final World CurrentWorld;
 
-    BlockManager blockManager;
+    final BlockManager blockManager;
 
     boolean FindingPath = false;
     boolean FoundPath = false;

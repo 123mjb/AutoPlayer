@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public class BlockManager {
 
-    World CurrentWorld;
+    final World CurrentWorld;
     @Nullable Supplier<BlockState> GetBlockState;
     public BlockManager(World currentWorld){
         CurrentWorld = currentWorld;

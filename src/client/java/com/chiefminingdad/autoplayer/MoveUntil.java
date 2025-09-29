@@ -9,8 +9,8 @@ import com.chiefminingdad.autoplayer.CustomClassHolder.*;
 import org.lwjgl.glfw.GLFW;
 
 public class MoveUntil {
-    public MinecraftClient Instance;
-    public ClientPlayerEntity player;
+    public final MinecraftClient Instance;
+    public final ClientPlayerEntity player;
     public KeyBinding Jump;
     public KeyBinding Forwards;
     public boolean Move = false;
@@ -32,7 +32,7 @@ public class MoveUntil {
     }
 
     private void InitKeybind(){
-        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleMoving", true, GLFW.GLFW_KEY_J, "movecontroller", keyBinding -> this.Move = !this.Move);
+        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleMoving", GLFW.GLFW_KEY_J, "movecontroller", keyBinding -> this.Move = !this.Move);
     }
 
     private void InitCommand(){
@@ -48,7 +48,7 @@ public class MoveUntil {
             for(int i=0;i<locs.length();i++) {
                 int finalI = i;
                 try {
-                    source.sendFeedback(() -> Text.literal("%s:%s".formatted(finalI,locs.getitem(finalI))), true);
+                    source.sendFeedback(() -> Text.literal("%s:%s".formatted(finalI,locs.getItem(finalI))), true);
                 }
                 catch (Exception e)
                 {

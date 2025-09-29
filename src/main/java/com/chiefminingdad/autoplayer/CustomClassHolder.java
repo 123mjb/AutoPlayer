@@ -7,7 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class CustomClassHolder {
     public static class DesiredLocation{
-        public int X,Y,Z;
+        public final int X;
+        public final int Y;
+        public final int Z;
         public boolean AddX = false,AddY = false,AddZ = false;
         public DesiredLocation(int x, int y, int z, boolean addX, boolean addY, boolean addZ){
             X=x;Y=y;Z=z;
@@ -20,10 +22,11 @@ public class CustomClassHolder {
         public DesiredLocation(int x,int y, int z){
             X=x;Y=y;Z=z;
         }
-        public int getitem(int index){
+        public int getItem(int index){
             return index>0?(index==1?Y:Z):X;
         }
 
+        @SuppressWarnings("SameReturnValue")
         public int length(){return 3;}
     }
 

@@ -17,9 +17,9 @@ public class KeyBindingBuilder {
         ));
     }
     public static class KeyBindtoRunningCode{
-        public KeyBinding keyBinding;
-        KeyBindtoRunningCode(String name, Boolean keyboard, int key, String category, Consumer<KeyBinding> code){
-            keyBinding = KeyBindingBuilder.BuildKeyBind(name,keyboard,key,category);
+        public final KeyBinding keyBinding;
+        KeyBindtoRunningCode(String name, int key, String category, Consumer<KeyBinding> code){
+            keyBinding = KeyBindingBuilder.BuildKeyBind(name, true,key,category);
 
             ClientTickEvents.END_CLIENT_TICK.register(client -> code.accept(keyBinding));
         }

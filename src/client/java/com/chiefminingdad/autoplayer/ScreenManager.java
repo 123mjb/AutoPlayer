@@ -25,6 +25,6 @@ public class ScreenManager {
             }
         };
 
-        keyBindingTest = new KeyBindtoRunningCode("test", true, GLFW.GLFW_KEY_V, "test", Code);
+        keyBindingTest = new KeyBindtoRunningCode("test", GLFW.GLFW_KEY_V, "test", Code);
     }
 }

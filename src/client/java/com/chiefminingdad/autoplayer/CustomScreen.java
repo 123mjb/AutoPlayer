@@ -7,7 +7,7 @@ import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 
 public class CustomScreen extends Screen {
-    public Screen parent;
+    public final Screen parent;
     public CustomScreen(Text title, Screen parent) {
         super(title);
         this.parent = parent;

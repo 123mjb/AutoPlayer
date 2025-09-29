@@ -4,10 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.world.World;
-import org.lwjgl.glfw.GLFW;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import static com.chiefminingdad.autoplayer.KeyBindingBuilder.*;
 
 public class AutoPlayerClient implements ClientModInitializer {
@@ -18,7 +15,7 @@ public class AutoPlayerClient implements ClientModInitializer {
 
 	MoveUntil moveUntil;
     PathFindingAlgo PathFinding;
-	ScreenManager screenManager = new ScreenManager();
+	final ScreenManager screenManager = new ScreenManager();
 	KeyBindtoRunningCode Move2Secs;
 
 
