@@ -9,7 +9,7 @@ import com.chiefminingdad.autoplayer.CustomClassHolder.*;
 import org.lwjgl.glfw.GLFW;
 
 public class MoveUntil {
-    public final MinecraftClient Instance = null;
+    public MinecraftClient Instance = null;
     public ClientPlayerEntity player;
     public KeyBinding Jump;
     public KeyBinding Forwards;
@@ -21,20 +21,30 @@ public class MoveUntil {
 
     public KeyBinding getJump(){
         if(Jump==null){
-            Jump = Instance.options.jumpKey;
+            Jump = getInstance().options.jumpKey;
         }return Jump;
+    }
+    public KeyBinding getForwards(){
+        if(Forwards==null){
+            Forwards = getInstance().options.forwardKey;
+        }return Forwards;
+    }
+    public MinecraftClient getInstance(){
+        if(Instance==null){
+            Instance = MinecraftClient.getInstance();
+        }return Instance;
     }
 
     MoveUntil(MinecraftClient client, ClientPlayerEntity Player){
         Instance = client;
         player = Player;
         if (player == null){
-            player = Instance.player;
+            player = getInstance().player;
         }
-        if (Instance.options!=null) {
+        if (getInstance().options!=null) {
 
-            Jump = Instance.options.jumpKey;
-            Forwards = Instance.options.forwardKey;
+            Jump = getInstance().options.jumpKey;
+            Forwards = getInstance().options.forwardKey;
         }
         InitKeybind();
         InitCommand();
@@ -43,7 +53,7 @@ public class MoveUntil {
 
 
     private void InitKeybind(){
-        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleMoving", GLFW.GLFW_KEY_J, "movecontroller", keyBinding -> this.Move = !this.Move);
+        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleMoving", GLFW.GLFW_KEY_J,true, "movecontroller", keyBinding -> this.Move = !this.Move);
     }
 
     private void InitCommand(){
@@ -104,11 +114,11 @@ public class MoveUntil {
 
                 if (desiredX != player.getX() | desiredY != player.getY() | desiredZ != player.getZ()) {
                     getJump().setPressed(desiredY > player.getY());
-                    Forwards.setPressed(desiredX != player.getX() | desiredZ != player.getZ());
+                    getForwards().setPressed(desiredX != player.getX() | desiredZ != player.getZ());
                 } else this.Move = false;
             }
         }else{
-            player = Instance.player;
+            player = getInstance().player;
         }
 
     }
