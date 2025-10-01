@@ -9,7 +9,7 @@ import com.chiefminingdad.autoplayer.CustomClassHolder.*;
 import org.lwjgl.glfw.GLFW;
 
 public class MoveUntil {
-    public MinecraftClient Instance = null;
+    public MinecraftClient Instance;
     public ClientPlayerEntity player;
     public KeyBinding Jump;
     public KeyBinding Forwards;
