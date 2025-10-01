@@ -53,7 +53,7 @@ public class MoveUntil {
 
 
     private void InitKeybind(){
-        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleMoving", GLFW.GLFW_KEY_J,true, "movecontroller", keyBinding -> {if(keyBinding.wasPressed()){AutoPlayer.LOGGER.info("switching val");this.Move = !this.Move;}});
+        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleMoving", GLFW.GLFW_KEY_J,true, "movecontroller", keyBinding -> {if(keyBinding.wasPressed()){this.Move = !this.Move;}});
     }
 
     private void InitCommand(){
@@ -109,10 +109,8 @@ public class MoveUntil {
 
     public void MoveCorrectDirection(){
         if (player!=null) {
-            AutoPlayer.LOGGER.info(String.valueOf(this.Move));
             if (this.Move) {
                 player.setYaw(this.desiredRotation);
-
                 if (desiredX != player.getX() | desiredY != player.getY() | desiredZ != player.getZ()) {
                     getJump().setPressed(desiredY > player.getY());
                     getForwards().setPressed(desiredX != player.getX() | desiredZ != player.getZ());
