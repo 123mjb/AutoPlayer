@@ -12,7 +12,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.chunk.WorldChunk;
 
 import java.util.BitSet;
-import java.util.Objects;
 
 public class Registerer {
     public Registerer(){
@@ -31,9 +30,10 @@ public class Registerer {
 
     private static void receive(ChunksC2SRequest payload, ServerPlayNetworking.Context context) {
         ServerPlayerEntity Player = context.player();
-        PlayerManager PM = Objects.requireNonNull(Player.getServer()).getPlayerManager();
-        if (PM.isOperator(Player.getGameProfile())) {
-            WorldChunk chunk = Player.getServerWorld().getChunk(payload.x(), payload.z());
+
+        PlayerManager PM = context.server().getPlayerManager();
+        if (PM.isOperator(Player.getPlayerConfigEntry())) {
+            WorldChunk chunk = Player.getEntityWorld().getChunk(payload.x(), payload.z());
             ChunkDataS2CPacket Payload = new ChunkDataS2CPacket(chunk,chunk.getWorld().getLightingProvider(),new BitSet(),new BitSet());
             Player.networkHandler.sendPacket(Payload);
         }
