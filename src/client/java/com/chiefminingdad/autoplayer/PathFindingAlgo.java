@@ -26,6 +26,25 @@ public class PathFindingAlgo {
         blockManager = new BlockManager(CurrentWorld);
     }
 
+    private boolean FindPath = false;
+    private BlockPos
+    private int section = 0;
+
+    /**
+     * Will do a section of code to find the most optimum path as to not spend too long on a tick.
+     * @return
+     * Whether the algorithm has finished.
+     */
+    public boolean doPathFinding(){
+            if (!this.FindPath) return false;
+
+            if (section==0){
+
+                section++;
+            }
+    }
+
+
     /**
      * @param x
      * The X value of the desired Location
