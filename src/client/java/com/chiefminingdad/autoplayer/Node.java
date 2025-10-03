@@ -23,6 +23,10 @@ public class Node {
         return SpecificWeight;
     }
 
+    public float getTotalSpecificWeight(){
+        return DistanceWeight+SpecificWeight;
+    }
+
 
     public Node(BlockPos pos){
         Pos = pos;
@@ -67,11 +71,14 @@ public class Node {
     public Node GetBestNode(int x,int y, int z){
         BlockPos[] PotentialBlocks = getSurrounding();
 
-        Node Lowest;
+        Node Lowest = new Node(new BlockPos(0,0,0),Float.MAX_VALUE,Float.MAX_VALUE);
 
         for(BlockPos Positions:PotentialBlocks){
-            float newWeight = findWeight(Pos,Positions) + findDistanceWeight(Positions,x,y,z);
-            if (newWeight < Lowest.getSpecificWeight()) {}
+            float newWeight = findWeight(Pos,Positions);
+            float newDistanceWeight = findDistanceWeight(Positions,x,y,z);
+            if (newWeight + newDistanceWeight < Lowest.getSpecificWeight()) {
+
+            }
         }
     }
 
