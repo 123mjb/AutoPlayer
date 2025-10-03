@@ -3,17 +3,53 @@ package com.chiefminingdad.autoplayer;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Node {
     public BlockPos Pos;
     private int X,Y,Z;
+    public float Weight;
+    public float SpecificWeight;
+    public float DistanceWeight;
+
+    public float getWeight(){
+        return Weight;
+    }
+
+    public float getTotalWeight() {
+        return Weight + DistanceWeight;
+    }
+
+    public float getSpecificWeight() {
+        return SpecificWeight;
+    }
+
+
     public Node(BlockPos pos){
         Pos = pos;
         X = pos.getX();
         Y = pos.getY();
         Z = pos.getZ();
+        Weight = 0;
+        SpecificWeight = 0;
     }
+
+    public Node(BlockPos pos,float totalWeight,float specificWeight){
+        Pos = pos;
+        X = pos.getX();
+        Y = pos.getY();
+        Z = pos.getZ();
+        Weight = totalWeight;
+        SpecificWeight = specificWeight;
+    }
+    public boolean setTotalWeight(float newWeight){
+        if(newWeight <Weight){
+            Weight = newWeight;
+            return true;
+        }
+        return false;
+    }
+
+
     public BlockPos[] getSurrounding(){
         ArrayList<BlockPos> allSurrounding = new ArrayList<>() {};
 
@@ -31,9 +67,19 @@ public class Node {
     public Node GetBestNode(int x,int y, int z){
         BlockPos[] PotentialBlocks = getSurrounding();
 
-        for(BlockPos Positions:PotentialBlocks){
+        Node Lowest;
 
+        for(BlockPos Positions:PotentialBlocks){
+            float newWeight = findWeight(Pos,Positions) + findDistanceWeight(Positions,x,y,z);
+            if (newWeight < Lowest.getSpecificWeight()) {}
         }
     }
 
+    public static float findWeight(BlockPos One,BlockPos Two){
+
+    }
+
+    public static float findDistanceWeight(BlockPos nextBlock, int X, int Y, int Z){
+        return (float)Math.sqrt(Math.pow(X-nextBlock.getX(),2)+Math.pow(Y-nextBlock.getY(),2)+Math.pow(Z-nextBlock.getZ(),2))/4;
+    }
 }
