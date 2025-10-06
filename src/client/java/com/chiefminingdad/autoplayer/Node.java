@@ -68,6 +68,21 @@ public class Node {
         }
         return (BlockPos[]) allSurrounding.toArray();
     }
+
+    public ArrayList<Node> GetAllSurroundingNodes(int x,int y, int z){
+        BlockPos[] PotentialBlocks = getSurrounding();
+        ArrayList<Node> NewNodes= new ArrayList<>();
+
+
+        for(BlockPos Positions:PotentialBlocks){
+            float newWeight = findWeight(Pos,Positions);
+            float newDistanceWeight = findDistanceWeight(Positions,x,y,z);
+            NewNodes.add(new Node(Positions,getWeight()+newWeight,newDistanceWeight));
+        }
+        return NewNodes;
+    }
+
+
     public Node GetBestNode(int x,int y, int z){
         BlockPos[] PotentialBlocks = getSurrounding();
 
