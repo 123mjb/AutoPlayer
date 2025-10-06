@@ -15,6 +15,10 @@ public class Node {
         return Weight;
     }
 
+    /**
+     * Value to rank the Nodes on.
+     * @return The sum of the weight + the distance weight
+     */
     public float getTotalWeight() {
         return Weight + DistanceWeight;
     }
@@ -103,5 +107,18 @@ public class Node {
 
     public static float findDistanceWeight(BlockPos nextBlock, int X, int Y, int Z){
         return (float)Math.sqrt(Math.pow(X-nextBlock.getX(),2)+Math.pow(Y-nextBlock.getY(),2)+Math.pow(Z-nextBlock.getZ(),2))/4;
+    }
+    
+    public static Node worstNode(){return new Node(new BlockPos(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE),Float.MAX_VALUE,Float.MAX_VALUE);}
+
+    public static class AllNodeList<Node> extends ArrayList<com.chiefminingdad.autoplayer.Node>{
+        public com.chiefminingdad.autoplayer.Node GetBest(){
+            com.chiefminingdad.autoplayer.Node Best = com.chiefminingdad.autoplayer.Node.worstNode();
+            for(com.chiefminingdad.autoplayer.Node nodes: (com.chiefminingdad.autoplayer.Node[])this.toArray()){
+                if(nodes.getTotalWeight()<Best.getTotalWeight()){
+                    Best = nodes;
+                }
+            }
+        }
     }
 }
