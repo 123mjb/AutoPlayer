@@ -1,6 +1,8 @@
 package com.chiefminingdad.autoplayer;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 import java.util.ArrayList;
 
@@ -86,21 +88,6 @@ public class Node {
         return NewNodes;
     }
 
-
-    public Node GetBestNode(int x,int y, int z){
-        BlockPos[] PotentialBlocks = getSurrounding();
-
-        Node Lowest = new Node(new BlockPos(0,0,0),Float.MAX_VALUE,Float.MAX_VALUE);
-
-        for(BlockPos Positions:PotentialBlocks){
-            float newWeight = findWeight(Pos,Positions);
-            float newDistanceWeight = findDistanceWeight(Positions,x,y,z);
-            if (newWeight + newDistanceWeight < Lowest.getSpecificWeight()) {
-
-            }
-        }
-    }
-
     public static float findWeight(BlockPos One,BlockPos Two){
 
     }
@@ -111,14 +98,26 @@ public class Node {
     
     public static Node worstNode(){return new Node(new BlockPos(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE),Float.MAX_VALUE,Float.MAX_VALUE);}
 
-    public static class AllNodeList<Node> extends ArrayList<com.chiefminingdad.autoplayer.Node>{
-        public com.chiefminingdad.autoplayer.Node GetBest(){
-            com.chiefminingdad.autoplayer.Node Best = com.chiefminingdad.autoplayer.Node.worstNode();
-            for(com.chiefminingdad.autoplayer.Node nodes: (com.chiefminingdad.autoplayer.Node[])this.toArray()){
-                if(nodes.getTotalWeight()<Best.getTotalWeight()){
-                    Best = nodes;
+    public static class AllNodeList<E> extends ArrayList<com.chiefminingdad.autoplayer.Node>{
+        public int GetBestLocation(){
+            Node BestNode = Node.worstNode();
+            int BestLoc = -1;
+            for(int i= 0;i<this.size();i++) {
+                Node Current = this.get(i);
+                if (Current.getTotalWeight() < BestNode.getTotalWeight()) {
+                    BestNode = Current;
+                    BestLoc = i;
                 }
             }
+            return BestLoc;
+        }
+        public void AddAllSurroundingNodes(int centre,int X,int Y,int Z){
+            for(Node newNode:this.get(centre).GetAllSurroundingNodes(X,Y,Z)){
+
+            }
+        }
+        public void AddAllSurroundingNodes(int centre, Vec3i Destined){
+
         }
     }
 }
