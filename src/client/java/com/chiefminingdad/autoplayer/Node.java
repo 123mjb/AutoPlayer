@@ -3,6 +3,8 @@ package com.chiefminingdad.autoplayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -12,6 +14,8 @@ public class Node {
     public float Weight;
     public float SpecificWeight;
     public float DistanceWeight;
+
+    private static final float DistanceWeightAdjustmentFactor = 4;
 
     public float getWeight(){
         return Weight;
@@ -93,10 +97,18 @@ public class Node {
     }
 
     public static float findDistanceWeight(BlockPos nextBlock, int X, int Y, int Z){
-        return (float)Math.sqrt(Math.pow(X-nextBlock.getX(),2)+Math.pow(Y-nextBlock.getY(),2)+Math.pow(Z-nextBlock.getZ(),2))/4;
+        return (float)Math.sqrt(
+                Math.pow((X!=Integer.MAX_VALUE)?X-nextBlock.getX():0,2)+
+                        Math.pow((Y!=Integer.MAX_VALUE)?Y-nextBlock.getY():0,2)+
+                        Math.pow((Z!=Integer.MAX_VALUE)?Z-nextBlock.getZ():0,2))/DistanceWeightAdjustmentFactor;
     }
     
-    public static Node worstNode(){return new Node(new BlockPos(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE),Float.MAX_VALUE,Float.MAX_VALUE);}
+    @Contract(" -> new")
+    public static @NotNull Node worstNode(){return new Node(new BlockPos(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE),Float.MAX_VALUE,Float.MAX_VALUE);}
+
+    public float getDistanceWeightAdjustmentFactor() {
+        return DistanceWeightAdjustmentFactor;
+    }
 
     public static class AllNodeList<E> extends ArrayList<com.chiefminingdad.autoplayer.Node>{
         public int GetBestLocation(){
@@ -113,11 +125,18 @@ public class Node {
         }
         public void AddAllSurroundingNodes(int centre,int X,int Y,int Z){
             for(Node newNode:this.get(centre).GetAllSurroundingNodes(X,Y,Z)){
+                    if(!this.contains(newNode)){
 
+                    }
             }
         }
         public void AddAllSurroundingNodes(int centre, Vec3i Destined){
+            AddAllSurroundingNodes(centre,Destined.getX(),Destined.getY(),Destined.getZ());
+        }
 
+        @Override
+        public boolean contains(Object o) {
+            return super.contains(o);
         }
     }
 }
