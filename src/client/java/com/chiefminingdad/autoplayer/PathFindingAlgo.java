@@ -1,10 +1,13 @@
 package com.chiefminingdad.autoplayer;
 
+import com.chiefminingdad.autoplayer.Node.AllNodeList;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 
 public class PathFindingAlgo {
@@ -27,7 +30,7 @@ public class PathFindingAlgo {
     }
 
     private boolean FindPath = false;
-    private BlockPos
+    private AllNodeList<Node> CheckedNodes = new AllNodeList<Node>();
     private int section = 0;
 
     /**
@@ -36,11 +39,9 @@ public class PathFindingAlgo {
      * Whether the algorithm has finished.
      */
     public boolean doPathFinding(){
-            if (!this.FindPath) return false;
-
-            if (section==0){
-
-                section++;
+            if (FindPath){
+                // TODO: Make it pause if a chunk is still being received.
+                CheckedNodes.AddAllSurroundingNodes(CheckedNodes.GetBestLocation(),X,Y,Z);
             }
     }
 
@@ -60,18 +61,18 @@ public class PathFindingAlgo {
     }
 
     /**
-     * @param locs
+     * @param Nodes
      * Array of all the blocks on the path.
      * @return
      * The minimum distance from the player to the supplied path.
      */
-    public double DistanceFromPlayerToPath(BlockPos @NotNull [] locs){
+    public double DistanceFromPlayerToPath(AllNodeList<Node> Nodes){
         double d = Double.MAX_VALUE;
-        for (BlockPos loc : locs) {
+        for (Node node: Nodes){
             double temp = mag(
-                    loc.getX() - player.getX(),
-                    loc.getY() - player.getY(),
-                    loc.getZ() - player.getZ()
+                    node.Pos.getX() - player.getX(),
+                    node.Pos.getY() - player.getY(),
+                    node.Pos.getZ() - player.getZ()
             );
             if (temp < d) {
                 d = temp;

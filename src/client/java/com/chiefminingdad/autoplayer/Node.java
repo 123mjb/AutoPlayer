@@ -5,6 +5,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Implements;
 
 import java.util.ArrayList;
 
@@ -126,17 +127,25 @@ public class Node {
         public void AddAllSurroundingNodes(int centre,int X,int Y,int Z){
             for(Node newNode:this.get(centre).GetAllSurroundingNodes(X,Y,Z)){
                     if(!this.contains(newNode)){
-
+                        this.add(newNode);
                     }
             }
         }
-        public void AddAllSurroundingNodes(int centre, Vec3i Destined){
+        public void AddAllSurroundingNodes(int centre, @NotNull Vec3i Destined){
             AddAllSurroundingNodes(centre,Destined.getX(),Destined.getY(),Destined.getZ());
         }
 
-        @Override
-        public boolean contains(Object o) {
-            return super.contains(o);
+        /**
+         * @param o The Node to check if it is in the list.
+         * @return Whether o is in the list.
+         */
+        public boolean contains(Node o) {
+            for (Node node : this) {
+                if (node.Pos == o.Pos) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
