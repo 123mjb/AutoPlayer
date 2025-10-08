@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -41,18 +42,28 @@ public class BlockManager {
     }
 
     public class WeightFinder{
+        private final Block BlueIce = Blocks.BLUE_ICE;
+        private final Block Ice = Blocks.ICE;
+        private final Block FrostedIce = Blocks.FROSTED_ICE;
+        private final Block PackedIce = Blocks.PACKED_ICE;
 
         public int FindBelowWeight(){
-            Block
+            Blocks.BLUE_ICE.getName()
         }
-        public float WeightSwitches(Block block,int WhichPredicament){
-            switch(WhichPredicament){
-                case 0:
-                    switch(block){
-                        case Blocks.
-                        default:
-                            return 4.317F;
-                    }
+        public float WeightSwitches(BlockState block,int WhichPredicament){
+//            switch(WhichPredicament){
+//                case 0:
+//                    return switch (block.getBlock()) {
+//                        case BlueIce -> 4.376F;
+//                        case Ice, FrostedIce, PackedIce -> 4.157F;
+//                        default -> 4.317F;
+//                    };
+//                default:
+//                    throw new IllegalStateException("Unexpected value: " + WhichPredicament);
+//            }
+            if(WhichPredicament==0){
+                Block checkblock= block.getBlock()
+                if()
             }
         }
     }
