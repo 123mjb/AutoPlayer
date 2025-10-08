@@ -2,7 +2,9 @@ package com.chiefminingdad.autoplayer;
 
 import com.chiefminingdad.autoplayer.records.ChunksC2SRequest;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -36,5 +38,22 @@ public class BlockManager {
             return ()-> CurrentWorld.getChunk(pos).getBlockState(pos);
         }
         return ()-> CurrentWorld.getBlockState(pos);
+    }
+
+    public class WeightFinder{
+
+        public int FindBelowWeight(){
+            Block
+        }
+        public float WeightSwitches(Block block,int WhichPredicament){
+            switch(WhichPredicament){
+                case 0:
+                    switch(block){
+                        case Blocks.
+                        default:
+                            return 4.317F;
+                    }
+            }
+        }
     }
 }

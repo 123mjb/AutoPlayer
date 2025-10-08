@@ -6,8 +6,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
 
 public class PathFindingAlgo {
@@ -41,7 +39,12 @@ public class PathFindingAlgo {
     public boolean doPathFinding(){
             if (FindPath){
                 // TODO: Make it pause if a chunk is still being received.
-                CheckedNodes.AddAllSurroundingNodes(CheckedNodes.GetBestLocation(),X,Y,Z);
+                if(section == 0) {
+                    CheckedNodes.AddAllSurroundingNodes(CheckedNodes.GetBestLocation(), X, Y, Z);
+                }
+                if(section == 1){
+
+                }
             }
     }
 
