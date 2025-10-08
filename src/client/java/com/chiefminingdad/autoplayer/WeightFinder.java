@@ -4,6 +4,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolMaterial;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class WeightFinder{
@@ -24,10 +27,10 @@ public class WeightFinder{
     private final Block HoneyBlock = Blocks.HONEY_BLOCK;
     private final Block SoulSand = Blocks.SOUL_SAND;
 
-    public float FindBelowWeight(BlockState UnderneathBlock){
-        return WeightSwitches(UnderneathBlock,0);
+    public float FindBelowWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
+        return WeightSwitches(UnderneathBlock,0,UnderneathBlockPos);
     }
-    public float WeightSwitches(BlockState block,int WhichPredicament){
+    public float WeightSwitches(BlockState block,int WhichPredicament, BlockPos blockPos){
         if(WhichPredicament==0){
             Block checkblock= block.getBlock();
             if(checkblock==BlueIce)return 4.376F;
@@ -36,8 +39,19 @@ public class WeightFinder{
             else if(checkblock==HoneyBlock| checkblock== SoulSand) return 2.508F;
         }
         else if(WhichPredicament==1){
-            int BlockHardness = block.getHardness(world.getW)
+            float BlockHardness = block.getHardness(world,blockPos);
+
+            for (ItemStack itemStack : Player.getInventory()) {
+                if(IsItemEfficient(itemStack,block)){
+
+                }
+            }
+
         }
         return -1;
+    }
+    public boolean IsItemEfficient(ItemStack stack,BlockState block){
+        if (stack.isEmpty()) return false;
+        return stack.isSuitableFor(block);
     }
 }
