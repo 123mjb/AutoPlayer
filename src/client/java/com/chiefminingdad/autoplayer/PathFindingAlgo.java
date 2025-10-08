@@ -13,6 +13,7 @@ public class PathFindingAlgo {
     final World CurrentWorld;
 
     final BlockManager blockManager;
+    final WeightFinder WF;
 
     boolean FindingPath = false;
     boolean FoundPath = false;
@@ -25,6 +26,7 @@ public class PathFindingAlgo {
         player = Player;
         CurrentWorld=world;
         blockManager = new BlockManager(CurrentWorld);
+        WF = new WeightFinder(Player,blockManager,CurrentWorld);
     }
 
     private boolean FindPath = false;

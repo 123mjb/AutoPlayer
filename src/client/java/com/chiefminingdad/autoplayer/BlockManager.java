@@ -40,31 +40,4 @@ public class BlockManager {
         }
         return ()-> CurrentWorld.getBlockState(pos);
     }
-
-    public class WeightFinder{
-        private final Block BlueIce = Blocks.BLUE_ICE;
-        private final Block Ice = Blocks.ICE;
-        private final Block FrostedIce = Blocks.FROSTED_ICE;
-        private final Block PackedIce = Blocks.PACKED_ICE;
-
-        public int FindBelowWeight(){
-            Blocks.BLUE_ICE.getName()
-        }
-        public float WeightSwitches(BlockState block,int WhichPredicament){
-//            switch(WhichPredicament){
-//                case 0:
-//                    return switch (block.getBlock()) {
-//                        case BlueIce -> 4.376F;
-//                        case Ice, FrostedIce, PackedIce -> 4.157F;
-//                        default -> 4.317F;
-//                    };
-//                default:
-//                    throw new IllegalStateException("Unexpected value: " + WhichPredicament);
-//            }
-            if(WhichPredicament==0){
-                Block checkblock= block.getBlock()
-                if()
-            }
-        }
-    }
 }
