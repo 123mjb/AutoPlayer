@@ -4,6 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -65,17 +67,23 @@ public class WeightFinder{
         ItemStack Item;
         BlockState Blck;
         WorldView World;
-        public ItemBlockBreakingSpeed(WorldView world, BlockState block, ItemStack item){
-            World = world;Blck = block; Item = item;
+        PlayerEntity Player;
+        BlockPos Pos;
+        public ItemBlockBreakingSpeed(WorldView world, BlockState block, ItemStack item, PlayerEntity player,BlockPos pos){
+            World = world;Blck = block; Item = item;Player=player; Pos = pos;
         }
 
         public float getSimpleSpeed(){
-
+            int i = canHarvest(this.Blck,this.Item) ? 30 : 100;
+            float h = this.Blck.getHardness(World,Pos);
+            float f = this.Item.getMiningSpeedMultiplier(this.Blck);
+            if (f > 1.0F) {
+                f += (float)this.Player.getAttributeValue(EntityAttributes.MINING_EFFICIENCY);
+            }
+            return f/i
         }
     }
-
-    public boolean IsItemEfficient(ItemStack stack,BlockState block){
-        if (stack.isEmpty()) return false;
-        return stack.isSuitableFor(block);
+    public boolean canHarvest(BlockState state,ItemStack stack) {
+        return !state.isToolRequired() || stack.isSuitableFor(state);
     }
 }
