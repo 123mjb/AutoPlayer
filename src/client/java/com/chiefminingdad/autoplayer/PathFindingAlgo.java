@@ -43,6 +43,7 @@ public class PathFindingAlgo {
                 // TODO: Make it pause if a chunk is still being received.
                 if(section == 0) {
                     CheckedNodes.AddAllSurroundingNodes(CheckedNodes.GetBestLocation(), X, Y, Z);
+                    section++;
                 }
                 if(section == 1){
 

@@ -80,21 +80,27 @@ public class Node {
         return (BlockPos[]) allSurrounding.toArray();
     }
 
-    public ArrayList<Node> GetAllSurroundingNodes(int x,int y, int z){
+    public ArrayList<Node> GetAllSurroundingNodes(int x,int y, int z,WeightFinder WF){
         BlockPos[] PotentialBlocks = getSurrounding();
         ArrayList<Node> NewNodes= new ArrayList<>();
 
 
         for(BlockPos Positions:PotentialBlocks){
-            float newWeight = findWeight(Pos,Positions);
+            float newWeight = findWeight(Pos,Positions,WF);
             float newDistanceWeight = findDistanceWeight(Positions,x,y,z);
             NewNodes.add(new Node(Positions,getWeight()+newWeight,newDistanceWeight));
         }
         return NewNodes;
     }
 
-    public static float findWeight(BlockPos One,BlockPos Two){
+    public static float findWeight(BlockPos One,BlockPos Two,WeightFinder WF){
 
+    }
+    public class BaseWeight{
+        //TODO: Rework Weights to allow for more information to stored on nodes such as best tool.
+        public BaseWeight(float belowWeight, WeightFinder ){
+
+        }
     }
 
     public static float findDistanceWeight(BlockPos nextBlock, int X, int Y, int Z){
@@ -125,7 +131,7 @@ public class Node {
             return BestLoc;
         }
         public void AddAllSurroundingNodes(int centre,int X,int Y,int Z){
-            for(Node newNode:this.get(centre).GetAllSurroundingNodes(X,Y,Z)){
+            for(Node newNode:this.get(centre).GetAllSurroundingNodes(X,Y,Z,WeightFinder,WF)){
                     if(!this.contains(newNode)){
                         this.add(newNode);
                     }
