@@ -12,14 +12,14 @@ import java.util.ArrayList;
 public class Node {
     public BlockPos Pos;
     private int X,Y,Z;
-    public float Weight;
+    public WeightFinder.WeightInfo Weight;
     public float SpecificWeight;
     public float DistanceWeight;
 
     private static final float DistanceWeightAdjustmentFactor = 4;
 
     public float getWeight(){
-        return Weight;
+        return Weight.Total();
     }
 
     /**
@@ -27,7 +27,7 @@ public class Node {
      * @return The sum of the weight + the distance weight
      */
     public float getTotalWeight() {
-        return Weight + DistanceWeight;
+        return Weight.Total() + DistanceWeight;
     }
 
     public float getSpecificWeight() {
@@ -44,11 +44,11 @@ public class Node {
         X = pos.getX();
         Y = pos.getY();
         Z = pos.getZ();
-        Weight = 0;
+        Weight = new WeightFinder.WeightInfo();
         SpecificWeight = 0;
     }
 
-    public Node(BlockPos pos,float totalWeight,float specificWeight){
+    public Node(BlockPos pos, WeightFinder.WeightInfo totalWeight, float specificWeight){
         Pos = pos;
         X = pos.getX();
         Y = pos.getY();
@@ -56,8 +56,8 @@ public class Node {
         Weight = totalWeight;
         SpecificWeight = specificWeight;
     }
-    public boolean setTotalWeight(float newWeight){
-        if(newWeight <Weight){
+    public boolean setTotalWeight(WeightFinder.WeightInfo newWeight){
+        if(newWeight.lessThan(Weight)){
             Weight = newWeight;
             return true;
         }
@@ -86,22 +86,22 @@ public class Node {
 
 
         for(BlockPos Positions:PotentialBlocks){
-            float newWeight = findWeight(Pos,Positions,WF);
+            WeightFinder.WeightInfo newWeight = findWeight(Pos,Positions,WF);
             float newDistanceWeight = findDistanceWeight(Positions,x,y,z);
             NewNodes.add(new Node(Positions,getWeight()+newWeight,newDistanceWeight));
         }
         return NewNodes;
     }
 
-    public static float findWeight(BlockPos One,BlockPos Two,WeightFinder WF){
-
+    public WeightFinder.WeightInfo findWeight(BlockPos One,BlockPos Two,WeightFinder WF){
+        BlockManager
     }
-    public class BaseWeight{
-        //TODO: Rework Weights to allow for more information to stored on nodes such as best tool.
-        public BaseWeight(float belowWeight, WeightFinder ){
-
-        }
-    }
+//    public class BaseWeight{
+//        //TODO: Rework Weights to allow for more information to stored on nodes such as best tool.
+//        public BaseWeight(float belowWeight, WeightFinder ){
+//
+//        }
+//    }
 
     public static float findDistanceWeight(BlockPos nextBlock, int X, int Y, int Z){
         return (float)Math.sqrt(

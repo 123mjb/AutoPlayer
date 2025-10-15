@@ -33,22 +33,35 @@ public class WeightFinder{
     private final Block HoneyBlock = Blocks.HONEY_BLOCK;
     private final Block SoulSand = Blocks.SOUL_SAND;
 
-    public float FindBelowWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
+    public WeightInfo FindBelowWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
         return WeightSwitches(UnderneathBlock,0,UnderneathBlockPos);
     }
-    public float WeightSwitches(BlockState block,int WhichPredicament, BlockPos blockPos){
+    public WeightInfo FindTopWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
+        return WeightSwitches(UnderneathBlock,2,UnderneathBlockPos);
+    }
+    public WeightInfo FindBottomWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
+        return WeightSwitches(UnderneathBlock,1,UnderneathBlockPos);
+    }
+    public WeightInfo WeightSwitches(BlockState block,int WhichPredicament, BlockPos blockPos){
         if(WhichPredicament==0){
             Block checkblock= block.getBlock();
-            if(checkblock==BlueIce)return 4.376F;
-            else if(checkblock==Ice|checkblock==FrostedIce|checkblock==PackedIce)return 4.157F;
-            else if(checkblock==SlimeBlock) return 3.04F;
-            else if(checkblock==HoneyBlock| checkblock== SoulSand) return 2.508F;
+            if(checkblock==BlueIce)return new WeightInfo(4.376F);
+            else if(checkblock==Ice|checkblock==FrostedIce|checkblock==PackedIce)return new WeightInfo(4.157F);
+            else if(checkblock==SlimeBlock) return new WeightInfo(3.04F);
+            else if(checkblock==HoneyBlock| checkblock== SoulSand) return new WeightInfo(2.508F);
         }
         else if(WhichPredicament==1){
             ItemBlockBreakingSpeed bestItem = getBestInventoryItemForBlock(Player.getInventory(),block,blockPos);
-            return bestItem.getFullSpeed();
+            WeightInfo temp = new WeightInfo();
+            temp.BottomBlock = bestItem;
+            return temp;
+        }else if(WhichPredicament==2){
+            ItemBlockBreakingSpeed bestItem = getBestInventoryItemForBlock(Player.getInventory(),block,blockPos);
+            WeightInfo temp = new WeightInfo();
+            temp.TopBlock = bestItem;
+            return temp;
         }
-        return -1;
+        return new WeightInfo();
     }
 
     public ItemBlockBreakingSpeed getBestInventoryItemForBlock(PlayerInventory inventory,BlockState block,BlockPos blockpos){
@@ -108,5 +121,44 @@ public class WeightFinder{
     }
     public boolean canHarvest(BlockState state,ItemStack stack) {
         return !state.isToolRequired() || stack.isSuitableFor(state);
+    }
+
+    public static class WeightInfo{
+        ItemBlockBreakingSpeed TopBlock=null;
+        ItemBlockBreakingSpeed BottomBlock=null;
+        float WalkingTime=-1.0F;
+        public WeightInfo(ItemBlockBreakingSpeed ItemSpeedTop,ItemBlockBreakingSpeed ItemSpeedBottom, float walkingTime){
+            TopBlock = ItemSpeedTop;
+            BottomBlock = ItemSpeedBottom;
+            WalkingTime = walkingTime;
+        }
+        public WeightInfo(ItemBlockBreakingSpeed ItemSpeedTop,ItemBlockBreakingSpeed ItemSpeedBottom, float walkingTime){
+            TopBlock = ItemSpeedTop;
+            BottomBlock = ItemSpeedBottom;
+            WalkingTime = walkingTime;
+        }
+        public WeightInfo(float walkingTime){
+            WalkingTime = walkingTime;
+        }
+        public WeightInfo(){
+        }
+
+        public float Total(){
+            return TopBlock.getFullSpeed()+BottomBlock.getFullSpeed()+WalkingTime;
+        }
+
+        public boolean lessThan(WeightInfo other){
+            return this.Total()<other.Total();
+        }
+
+        public WeightInfo append(WeightInfo newLocation){
+            return
+        }
+
+        public void merge(WeightInfo otherweights){
+            if(TopBlock == null) TopBlock = otherweights.TopBlock;
+            if(BottomBlock == null) BottomBlock = otherweights.BottomBlock;
+            if(WalkingTime==-1.0F) WalkingTime = otherweights.WalkingTime;
+        }
     }
 }
