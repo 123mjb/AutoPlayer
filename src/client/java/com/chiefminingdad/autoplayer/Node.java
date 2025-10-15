@@ -88,7 +88,7 @@ public class Node {
         for(BlockPos Positions:PotentialBlocks){
             WeightFinder.WeightInfo newWeight = findWeight(Pos,Positions,WF);
             float newDistanceWeight = findDistanceWeight(Positions,x,y,z);
-            NewNodes.add(new Node(Positions,getWeight()+newWeight,newDistanceWeight));
+            NewNodes.add(new Node(Positions,Weight.append(newWeight),newDistanceWeight));
         }
         return NewNodes;
     }

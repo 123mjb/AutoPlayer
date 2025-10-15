@@ -132,7 +132,7 @@ public class WeightFinder{
             BottomBlock = ItemSpeedBottom;
             WalkingTime = walkingTime;
         }
-        public WeightInfo(ItemBlockBreakingSpeed ItemSpeedTop,ItemBlockBreakingSpeed ItemSpeedBottom, float walkingTime){
+        public WeightInfo(ItemBlockBreakingSpeed ItemSpeedTop,ItemBlockBreakingSpeed ItemSpeedBottom, float walkingTime,  BlockPos previousPos, float previousweight){
             TopBlock = ItemSpeedTop;
             BottomBlock = ItemSpeedBottom;
             WalkingTime = walkingTime;
@@ -151,8 +151,9 @@ public class WeightFinder{
             return this.Total()<other.Total();
         }
 
-        public WeightInfo append(WeightInfo newLocation){
-            return
+        public WeightInfo append(WeightInfo newLocation, BlockPos oldPos){
+            WeightInfo temp = newLocation;
+            temp.
         }
 
         public void merge(WeightInfo otherweights){
