@@ -30,7 +30,7 @@ public class PathFindingAlgo {
     }
 
     private boolean FindPath = false;
-    private AllNodeList<Node> CheckedNodes = new AllNodeList<Node>();
+    private AllNodeList CheckedNodes = new AllNodeList();
     private int section = 0;
 
     /**
@@ -42,7 +42,7 @@ public class PathFindingAlgo {
             if (FindPath){
                 // TODO: Make it pause if a chunk is still being received.
                 if(section == 0) {
-                    CheckedNodes.AddAllSurroundingNodes(CheckedNodes.GetBestLocation(), X, Y, Z);
+                    CheckedNodes.AddAllSurroundingNodes(CheckedNodes.GetBestLocation(), X, Y, Z,WF);
                     section++;
                 }
                 if(section == 1){
@@ -72,7 +72,7 @@ public class PathFindingAlgo {
      * @return
      * The minimum distance from the player to the supplied path.
      */
-    public double DistanceFromPlayerToPath(AllNodeList<Node> Nodes){
+    public double DistanceFromPlayerToPath(AllNodeList Nodes){
         double d = Double.MAX_VALUE;
         for (Node node: Nodes){
             double temp = mag(

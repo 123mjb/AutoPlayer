@@ -1,11 +1,9 @@
 package com.chiefminingdad.autoplayer;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Implements;
 
 import java.util.ArrayList;
 
@@ -80,21 +78,21 @@ public class Node {
         return (BlockPos[]) allSurrounding.toArray();
     }
 
-    public ArrayList<Node> GetAllSurroundingNodes(int x,int y, int z,WeightFinder WF){
+    public ArrayList<Node> GetAllSurroundingNodes(int x,int y, int z,WeightFinder WF,BlockManager BM){
         BlockPos[] PotentialBlocks = getSurrounding();
         ArrayList<Node> NewNodes= new ArrayList<>();
 
 
         for(BlockPos Positions:PotentialBlocks){
-            WeightFinder.WeightInfo newWeight = findWeight(Pos,Positions,WF);
+            WeightFinder.WeightInfo newWeight = findWeight(Pos,Positions,WF,BM);
             float newDistanceWeight = findDistanceWeight(Positions,x,y,z);
-            NewNodes.add(new Node(Positions,Weight.append(newWeight),newDistanceWeight));
+            NewNodes.add(new Node(Positions,Weight.append(newWeight,Pos),newDistanceWeight));
         }
         return NewNodes;
     }
 
-    public WeightFinder.WeightInfo findWeight(BlockPos One,BlockPos Two,WeightFinder WF){
-        BlockManager
+    public WeightFinder.WeightInfo findWeight(BlockPos One,BlockPos Two,WeightFinder WF,BlockManager BM){
+
     }
 //    public class BaseWeight{
 //        //TODO: Rework Weights to allow for more information to stored on nodes such as best tool.
@@ -111,13 +109,13 @@ public class Node {
     }
     
     @Contract(" -> new")
-    public static @NotNull Node worstNode(){return new Node(new BlockPos(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE),Float.MAX_VALUE,Float.MAX_VALUE);}
+    public static @NotNull Node worstNode(){return new Node(new BlockPos(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE), new WeightFinder.WorstWeight(),Float.MAX_VALUE);}
 
     public float getDistanceWeightAdjustmentFactor() {
         return DistanceWeightAdjustmentFactor;
     }
 
-    public static class AllNodeList<E> extends ArrayList<com.chiefminingdad.autoplayer.Node>{
+    public static class AllNodeList extends ArrayList<com.chiefminingdad.autoplayer.Node>{
         public int GetBestLocation(){
             Node BestNode = Node.worstNode();
             int BestLoc = -1;
@@ -130,15 +128,24 @@ public class Node {
             }
             return BestLoc;
         }
-        public void AddAllSurroundingNodes(int centre,int X,int Y,int Z){
-            for(Node newNode:this.get(centre).GetAllSurroundingNodes(X,Y,Z,WeightFinder,WF)){
+
+        /**
+         * Adds all the nodes around the node in the list with index centre.
+         * @param centre index of the block
+         * @param X x of the desired location
+         * @param Y y of the desired location
+         * @param Z z of the desired location
+         * @param WF WeightFinder class instance.
+         */
+        public void AddAllSurroundingNodes(int centre,int X,int Y,int Z,WeightFinder WF){
+            for(Node newNode:this.get(centre).GetAllSurroundingNodes(X,Y,Z,WF)){
                     if(!this.contains(newNode)){
                         this.add(newNode);
                     }
             }
         }
-        public void AddAllSurroundingNodes(int centre, @NotNull Vec3i Destined){
-            AddAllSurroundingNodes(centre,Destined.getX(),Destined.getY(),Destined.getZ());
+        public void AddAllSurroundingNodes(int centre, @NotNull Vec3i Destined,WeightFinder WF){
+            AddAllSurroundingNodes(centre,Destined.getX(),Destined.getY(),Destined.getZ(),WF);
         }
 
         /**
