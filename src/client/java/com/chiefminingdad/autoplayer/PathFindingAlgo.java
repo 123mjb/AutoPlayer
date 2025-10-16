@@ -32,6 +32,9 @@ public class PathFindingAlgo {
     private boolean FindPath = false;
     private AllNodeList CheckedNodes = new AllNodeList();
     private int section = 0;
+    private boolean RunningConcurrently = false;
+    int bestLoc;
+    addSurrounding AddSurrounding = new addSurrounding();
 
     /**
      * Will do a section of code to find the most optimum path as to not spend too long on a tick.
@@ -42,13 +45,22 @@ public class PathFindingAlgo {
             if (FindPath){
                 // TODO: Make it pause if a chunk is still being received.
                 if(section == 0) {
-                    CheckedNodes.AddAllSurroundingNodes(CheckedNodes.GetBestLocation(), X, Y, Z,WF);
+                    bestLoc = CheckedNodes.GetBestLocation();
                     section++;
                 }
                 if(section == 1){
-
+                    if (!RunningConcurrently){
+                        AddSurrounding.run(bestLoc);
+                    }
                 }
             }
+    }
+    public class addSurrounding extends Thread{
+        public void run(int BestLoc){
+            CheckedNodes.AddAllSurroundingNodes(BestLoc, X, Y, Z,WF);
+            RunningConcurrently = false;
+            section = 2;
+        }
     }
 
 

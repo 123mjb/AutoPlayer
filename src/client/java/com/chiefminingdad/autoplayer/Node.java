@@ -1,5 +1,6 @@
 package com.chiefminingdad.autoplayer;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.Contract;
@@ -92,7 +93,13 @@ public class Node {
     }
 
     public WeightFinder.WeightInfo findWeight(BlockPos One,BlockPos Two,WeightFinder WF,BlockManager BM){
-
+        // TODO: Make only mods be able to access chunks not yet loaded ingame
+        BlockState[] blockStates = new BlockState[3];
+        while(blockStates[0]==null|blockStates[1]==null|blockStates[2]==null){
+            if (blockStates[0]==null){
+                blockStates[0] = BM.
+            }
+        }
     }
 //    public class BaseWeight{
 //        //TODO: Rework Weights to allow for more information to stored on nodes such as best tool.
