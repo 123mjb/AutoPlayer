@@ -34,7 +34,8 @@ public class PathFindingAlgo {
     private int section = 0;
     private boolean RunningConcurrently = false;
     int bestLoc;
-    addSurrounding AddSurrounding = new addSurrounding();
+    addSurrounding AddSurrounding;
+    Thread CurrentRunning;
 
     /**
      * Will do a section of code to find the most optimum path as to not spend too long on a tick.
@@ -49,16 +50,32 @@ public class PathFindingAlgo {
                     section++;
                 }
                 if(section == 1){
+                    if(AddSurrounding == null){
+                        AddSurrounding = new addSurrounding(bestLoc);
+                    }
                     if (!RunningConcurrently){
-                        AddSurrounding.run(bestLoc);
+                        CurrentRunning = new Thread(AddSurrounding);
+                        CurrentRunning.start();
+                        RunningConcurrently = true;
                     }
                 }
+                if(section == 2){
+                    //TODO: Checking Some important stuff e.g. if the pathfinding has finished or got far enough.
+                }
             }
+            return false;
     }
-    public class addSurrounding extends Thread{
-        public void run(int BestLoc){
-            CheckedNodes.AddAllSurroundingNodes(BestLoc, X, Y, Z,WF);
+    public class addSurrounding implements Runnable{
+        int BestLoc;
+        public addSurrounding(int bestLoc){
+            BestLoc = bestLoc;
+        }
+
+        @Override
+        public void run() {
+            CheckedNodes.AddAllSurroundingNodes(BestLoc, X, Y, Z,WF,blockManager);
             RunningConcurrently = false;
+            AddSurrounding = null;
             section = 2;
         }
     }

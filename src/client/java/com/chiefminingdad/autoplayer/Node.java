@@ -116,7 +116,11 @@ public class Node {
                 WF.findBottomWeight(blockStates[1],Two.up(1)),
                 WF.findTopWeight(blockStates[2],Two.up(2))
         };
-        return
+        WeightFinder.WeightInfo a = new WeightFinder.WeightInfo();
+        a.merge(weightInfos[0]);
+        a.merge(weightInfos[1]);
+        a.merge(weightInfos[2]);
+        return a;
     }
 
     public static float findDistanceWeight(BlockPos nextBlock, int X, int Y, int Z) {
@@ -158,16 +162,16 @@ public class Node {
          * @param Z      z of the desired location
          * @param WF     WeightFinder class instance.
          */
-        public void AddAllSurroundingNodes(int centre, int X, int Y, int Z, WeightFinder WF) {
-            for (Node newNode : this.get(centre).GetAllSurroundingNodes(X, Y, Z, WF)) {
+        public void AddAllSurroundingNodes(int centre, int X, int Y, int Z, WeightFinder WF,BlockManager BM) {
+            for (Node newNode : this.get(centre).GetAllSurroundingNodes(X, Y, Z, WF,BM)) {
                 if (!this.contains(newNode)) {
                     this.add(newNode);
                 }
             }
         }
 
-        public void AddAllSurroundingNodes(int centre, @NotNull Vec3i Destined, WeightFinder WF) {
-            AddAllSurroundingNodes(centre, Destined.getX(), Destined.getY(), Destined.getZ(), WF);
+        public void AddAllSurroundingNodes(int centre, @NotNull Vec3i Destined, WeightFinder WF,BlockManager BM) {
+            AddAllSurroundingNodes(centre, Destined.getX(), Destined.getY(), Destined.getZ(), WF,BM);
         }
 
         /**
