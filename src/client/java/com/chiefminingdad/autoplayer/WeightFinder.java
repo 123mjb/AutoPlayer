@@ -33,13 +33,13 @@ public class WeightFinder{
     private final Block HoneyBlock = Blocks.HONEY_BLOCK;
     private final Block SoulSand = Blocks.SOUL_SAND;
 
-    public WeightInfo FindBelowWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
+    public WeightInfo findBelowWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
         return WeightSwitches(UnderneathBlock,0,UnderneathBlockPos);
     }
-    public WeightInfo FindTopWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
+    public WeightInfo findTopWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
         return WeightSwitches(UnderneathBlock,2,UnderneathBlockPos);
     }
-    public WeightInfo FindBottomWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
+    public WeightInfo findBottomWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
         return WeightSwitches(UnderneathBlock,1,UnderneathBlockPos);
     }
     public WeightInfo WeightSwitches(BlockState block,int WhichPredicament, BlockPos blockPos){

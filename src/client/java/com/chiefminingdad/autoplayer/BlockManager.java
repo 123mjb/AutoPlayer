@@ -16,19 +16,40 @@ import java.util.function.Supplier;
 public class BlockManager {
 
     final World CurrentWorld;
-    @Nullable Supplier<BlockState> GetBlockState;
     public BlockManager(World currentWorld){
         CurrentWorld = currentWorld;
     }
 
-    public @Nullable BlockState TryGetBlock(BlockPos pos){
-        if (GetBlockState==null) GetBlockState = getBlock(pos);
-        BlockState state = GetBlockState.get();
-        if (state!=null){
-            GetBlockState = null;
+//    public @Nullable BlockState TryGetBlock(BlockPos pos){
+//        if (GetBlockState==null) GetBlockState = getBlock(pos);
+//        BlockState state = GetBlockState.get();
+//        if (state!=null){
+//            GetBlockState = null;
+//            return state;
+//        }
+//        return null;
+//    }
+
+    /**
+     *
+     */
+    public static class BlockGetter{
+        private final Supplier<BlockState> GetBlockState;
+        private @Nullable BlockState state;
+
+        /**
+         * @param pos
+         */
+        public BlockGetter(BlockPos pos,BlockManager BM){
+            GetBlockState = BM.getBlock(pos);
+        }
+        public boolean tryget(){
+            state = GetBlockState.get();
+            return !(state==null);
+        }
+        public @Nullable BlockState getState(){
             return state;
         }
-        return null;
     }
 
     public Supplier<@Nullable BlockState> getBlock(BlockPos pos){
