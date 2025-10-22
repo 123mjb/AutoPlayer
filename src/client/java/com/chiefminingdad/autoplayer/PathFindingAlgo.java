@@ -25,8 +25,8 @@ public class PathFindingAlgo {
     public PathFindingAlgo(ClientPlayerEntity Player, World world){
         player = Player;
         CurrentWorld=world;
-        blockManager = new BlockManager(CurrentWorld);
-        WF = new WeightFinder(Player,blockManager,CurrentWorld);
+        blockManager = new BlockManager(CurrentWorld,player);
+        WF = new WeightFinder(player,blockManager,CurrentWorld);
     }
 
     private boolean FindPath = false;

@@ -37,5 +37,6 @@ public class Registerer {
             ChunkDataS2CPacket Payload = new ChunkDataS2CPacket(chunk,chunk.getWorld().getLightingProvider(),new BitSet(),new BitSet());
             Player.networkHandler.sendPacket(Payload);
         }
+        //TODO: Make it send info that the player is not moderator.
     }
 }
