@@ -1,6 +1,7 @@
 package com.chiefminingdad.autoplayer;
 
 import com.chiefminingdad.autoplayer.records.ChunksC2SRequest;
+import com.chiefminingdad.autoplayer.records.ChunksS2CConfirmation;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -16,6 +17,7 @@ import java.util.BitSet;
 public class Registerer {
     public Registerer(){
         PayloadTypeRegistry.playC2S().register(ChunksC2SRequest.ID,ChunksC2SRequest.CODEC);
+        PayloadTypeRegistry.playS2C().register(ChunksS2CConfirmation.ID,ChunksS2CConfirmation.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(ChunksC2SRequest.ID, Registerer::receive);
 
@@ -36,6 +38,10 @@ public class Registerer {
             WorldChunk chunk = Player.getEntityWorld().getChunk(payload.x(), payload.z());
             ChunkDataS2CPacket Payload = new ChunkDataS2CPacket(chunk,chunk.getWorld().getLightingProvider(),new BitSet(),new BitSet());
             Player.networkHandler.sendPacket(Payload);
+            ServerPlayNetworking.send(Player,new ChunksS2CConfirmation(true));
+        }
+        else{
+            ServerPlayNetworking.send(Player,new ChunksS2CConfirmation(false));
         }
         //TODO: Make it send info that the player is not moderator.
     }
