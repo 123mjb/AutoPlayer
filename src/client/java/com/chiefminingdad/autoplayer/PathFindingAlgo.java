@@ -44,9 +44,9 @@ public class PathFindingAlgo {
      */
     public boolean doPathFinding(){
             if (FindPath){
-                // TODO: Make it pause if a chunk is still being received.
+                // TODO: Make it pause if a chunk is still being received. Should Do Now Check Code
                 if(section == 0) {
-                    bestLoc = CheckedNodes.GetBestLocation();
+                    bestLoc = CheckedNodes.GetBestLocation();//TODO:does it actually check if a node has already been used or update the weight when a better one is found
                     section++;
                 }
                 if(section == 1){

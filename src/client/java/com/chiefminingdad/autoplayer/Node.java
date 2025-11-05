@@ -16,6 +16,7 @@ public class Node {
     public WeightFinder.WeightInfo Weight;
     public float SpecificWeight;
     public float DistanceWeight;
+    public boolean checked = false;
 
     private static final float DistanceWeightAdjustmentFactor = 4;
 
@@ -90,7 +91,7 @@ public class Node {
 
 
         for (BlockPos Positions : PotentialBlocks) {
-            WeightFinder.WeightInfo newWeight = findWeight(Pos, Positions, WF, BM);//TODO: Ability to return that the getting of the block is impossible.
+            WeightFinder.WeightInfo newWeight = findWeight(Pos, Positions, WF, BM);
             float newDistanceWeight = findDistanceWeight(Positions, x, y, z);
             NewNodes.add(new Node(Positions, Weight.append(newWeight, Pos), newDistanceWeight));
         }
@@ -105,21 +106,21 @@ public class Node {
         while (blockStates[0] == null | blockStates[1] == null | blockStates[2] == null) {
             tryget = getters[0].tryget(BM.Unavailable);
             if(tryget.isEmpty()) {
-                return null;
+                return new WeightFinder.UnattainableWeight();
             }
             if (!tryget.get()) {
                 blockStates[0] = getters[0].getState();
             }
             tryget = getters[1].tryget(BM.Unavailable);
             if(tryget.isEmpty()) {
-                return null;
+                return new WeightFinder.UnattainableWeight();
             }
             if (!tryget.get()) {
                 blockStates[1] = getters[1].getState();
             }
             tryget = getters[2].tryget(BM.Unavailable);
             if(tryget.isEmpty()) {
-                return null;
+                return new WeightFinder.UnattainableWeight();
             }
             if (!tryget.get()) {
                 blockStates[2] = getters[2].getState();
@@ -161,11 +162,12 @@ public class Node {
             int BestLoc = -1;
             for (int i = 0; i < this.size(); i++) {
                 Node Current = this.get(i);
-                if (Current.getTotalWeight() < BestNode.getTotalWeight()) {
+                if (Current.getTotalWeight() < BestNode.getTotalWeight()&!Current.checked) {
                     BestNode = Current;
                     BestLoc = i;
                 }
             }
+            BestNode.checked = true;
             return BestLoc;
         }
 
@@ -179,12 +181,14 @@ public class Node {
          * @param WF     WeightFinder class instance.
          */
         public boolean AddAllSurroundingNodes(int centre, int X, int Y, int Z, WeightFinder WF,BlockManager BM) {
+            boolean CouldntFindABlock = false;
             for (Node newNode : this.get(centre).GetAllSurroundingNodes(X, Y, Z, WF,BM)) {
-                if (newNode.Weight)
+                if (newNode.Weight.isUnattainable()){CouldntFindABlock=true;}
                 if (!this.contains(newNode)) {
                     this.add(newNode);
                 }
             }
+            return CouldntFindABlock;
         }
 
         public void AddAllSurroundingNodes(int centre, @NotNull Vec3i Destined, WeightFinder WF,BlockManager BM) {

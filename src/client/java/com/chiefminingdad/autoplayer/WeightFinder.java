@@ -167,11 +167,20 @@ public class WeightFinder{
             if(BottomBlock == null) BottomBlock = otherweights.BottomBlock;
             if(WalkingTime==-1.0F) WalkingTime = otherweights.WalkingTime;
         }
+        public boolean isUnattainable(){
+            return false;
+        }
     }
     public static class WorstWeight extends WeightInfo{
         @Override
         public float Total() {
             return Float.MAX_VALUE;
+        }
+    }
+    public static class UnattainableWeight extends WeightInfo{
+        @Override
+        public boolean isUnattainable() {
+            return true;
         }
     }
 }
