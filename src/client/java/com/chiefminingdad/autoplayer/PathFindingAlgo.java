@@ -12,7 +12,7 @@ public class PathFindingAlgo {
     final ClientPlayerEntity player;
     final World CurrentWorld;
 
-    final BlockManager blockManager;
+    public final BlockManager blockManager;
     final WeightFinder WF;
 
     boolean FindingPath = false;
@@ -30,7 +30,7 @@ public class PathFindingAlgo {
     }
 
     private boolean FindPath = false;
-    private AllNodeList CheckedNodes = new AllNodeList();
+    public AllNodeList CheckedNodes = new AllNodeList();
     private int section = 0;
     private boolean RunningConcurrently = false;
     int bestLoc;

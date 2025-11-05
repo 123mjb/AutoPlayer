@@ -1,6 +1,8 @@
 package com.chiefminingdad.autoplayer;
 
+import com.chiefminingdad.autoplayer.records.ChunksS2CConfirmation;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.world.World;
@@ -24,7 +26,9 @@ public class AutoPlayerClient implements ClientModInitializer {
         SetVars();
         InitializeClasses();
 
-
+        ClientPlayNetworking.registerGlobalReceiver(ChunksS2CConfirmation.ID,(payload,context)->{
+           if (!payload.canSend())PathFinding.blockManager.AddUnavailable(payload.BlockLoc());
+        });
 
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 		this.screenManager.init();

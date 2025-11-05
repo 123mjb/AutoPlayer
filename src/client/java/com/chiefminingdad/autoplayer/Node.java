@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class Node {
     public BlockPos Pos;
@@ -89,7 +90,7 @@ public class Node {
 
 
         for (BlockPos Positions : PotentialBlocks) {
-            WeightFinder.WeightInfo newWeight = findWeight(Pos, Positions, WF, BM);
+            WeightFinder.WeightInfo newWeight = findWeight(Pos, Positions, WF, BM);//TODO: Ability to return that the getting of the block is impossible.
             float newDistanceWeight = findDistanceWeight(Positions, x, y, z);
             NewNodes.add(new Node(Positions, Weight.append(newWeight, Pos), newDistanceWeight));
         }
@@ -100,14 +101,27 @@ public class Node {
         // TODO: Make only moderators be able to access chunks not yet loaded ingame
         BlockGetter[] getters = new BlockGetter[]{new BlockGetter(Two,BM), new BlockGetter(Two.up(1),BM), new BlockGetter(Two.up(2),BM)};
         BlockState[] blockStates = new BlockState[3];
+        Optional<Boolean> tryget;
         while (blockStates[0] == null | blockStates[1] == null | blockStates[2] == null) {
-            if (!getters[0].tryget()) {
+            tryget = getters[0].tryget(BM.Unavailable);
+            if(tryget.isEmpty()) {
+                return null;
+            }
+            if (!tryget.get()) {
                 blockStates[0] = getters[0].getState();
             }
-            if (!getters[1].tryget()) {
+            tryget = getters[1].tryget(BM.Unavailable);
+            if(tryget.isEmpty()) {
+                return null;
+            }
+            if (!tryget.get()) {
                 blockStates[1] = getters[1].getState();
             }
-            if (!getters[2].tryget()) {
+            tryget = getters[2].tryget(BM.Unavailable);
+            if(tryget.isEmpty()) {
+                return null;
+            }
+            if (!tryget.get()) {
                 blockStates[2] = getters[2].getState();
             }
         }
@@ -139,7 +153,9 @@ public class Node {
         return DistanceWeightAdjustmentFactor;
     }
 
+
     public static class AllNodeList extends ArrayList<com.chiefminingdad.autoplayer.Node> {
+
         public int GetBestLocation() {
             Node BestNode = Node.worstNode();
             int BestLoc = -1;
@@ -162,8 +178,9 @@ public class Node {
          * @param Z      z of the desired location
          * @param WF     WeightFinder class instance.
          */
-        public void AddAllSurroundingNodes(int centre, int X, int Y, int Z, WeightFinder WF,BlockManager BM) {
+        public boolean AddAllSurroundingNodes(int centre, int X, int Y, int Z, WeightFinder WF,BlockManager BM) {
             for (Node newNode : this.get(centre).GetAllSurroundingNodes(X, Y, Z, WF,BM)) {
+                if (newNode.Weight)
                 if (!this.contains(newNode)) {
                     this.add(newNode);
                 }
