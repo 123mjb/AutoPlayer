@@ -179,6 +179,9 @@ public class Node {
          * @param Y      y of the desired location
          * @param Z      z of the desired location
          * @param WF     WeightFinder class instance.
+         *
+         * @return
+         * If the algorithm couldn't find the state of a block.
          */
         public boolean AddAllSurroundingNodes(int centre, int X, int Y, int Z, WeightFinder WF,BlockManager BM) {
             boolean CouldntFindABlock = false;
@@ -186,6 +189,13 @@ public class Node {
                 if (newNode.Weight.isUnattainable()){CouldntFindABlock=true;}
                 if (!this.contains(newNode)) {
                     this.add(newNode);
+                }
+                else{
+                    int oldNodeIndex = this.findIndex(newNode.Pos);
+                    Node oldNode = this.get(oldNodeIndex);
+                    if (oldNode.getTotalWeight()<newNode.getTotalWeight()){
+                        this.set(oldNodeIndex,newNode);
+                    }
                 }
             }
             return CouldntFindABlock;
@@ -206,6 +216,23 @@ public class Node {
                 }
             }
             return false;
+        }
+        public int findIndex(BlockPos p){
+            for(int i = 0; i < this.size(); i++){
+                if(this.get(i).Pos == p){
+                    return i;
+                }
+            }
+            return -1;
+        }
+        public int findIndex(Node o){
+            return findIndex(o.Pos);
+        }
+        public Node findNode(Node p){
+            return this.get(findIndex(p));
+        }
+        public Node findNode(BlockPos p){
+            return this.get(findIndex(p));
         }
     }
 }

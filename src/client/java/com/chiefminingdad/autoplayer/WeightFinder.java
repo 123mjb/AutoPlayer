@@ -177,7 +177,7 @@ public class WeightFinder{
             return Float.MAX_VALUE;
         }
     }
-    public static class UnattainableWeight extends WeightInfo{
+    public static class UnattainableWeight extends WorstWeight{
         @Override
         public boolean isUnattainable() {
             return true;
