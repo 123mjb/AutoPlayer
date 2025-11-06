@@ -20,7 +20,7 @@ public class PathFindingAlgo {
     int X,Y,Z;
 
     BlockPos[] PathBlocks = new BlockPos[] {};
-    Stack<BlockPos> PathStack = new Stack<>();
+    Stack<Node> PathStack = new Stack<>();
 
     public PathFindingAlgo(ClientPlayerEntity Player, World world){
         player = Player;
@@ -47,6 +47,7 @@ public class PathFindingAlgo {
                 // TODO: Make it pause if a chunk is still being received. Should Do Now Check Code
                 if(section == 0) {
                     bestLoc = CheckedNodes.GetBestLocation();//TODO:does it actually check if a node has already been used or update the weight when a better one is found
+                    if(BlockPosWorksForLoc(CheckedNodes.get(bestLoc).Pos)) section=2;
                     section++;
                 }
                 if(section == 1){
@@ -60,10 +61,14 @@ public class PathFindingAlgo {
                     }
                 }
                 if(section == 2){
-                    //TODO: Checking Some important stuff e.g. if the pathfinding has finished or got far enough.
+                    ConvertAllNodeListIntoPathStack();
+                    PathBlocks = (BlockPos[]) PathStack.toArray();
                 }
             }
             return false;
+    }
+    public boolean BlockPosWorksForLoc(@NotNull BlockPos p){
+        return !((X == Integer.MAX_VALUE | X != p.getX()) & (Y == Integer.MAX_VALUE | Y != p.getY()) & (Z == Integer.MAX_VALUE | Z != p.getZ()));
     }
     public class addSurrounding implements Runnable{
         int BestLoc;
@@ -125,10 +130,15 @@ public class PathFindingAlgo {
         return mag(x-BP.getX(),y-BP.getY(),z-BP.getZ());
     }
 
+    private void ConvertAllNodeListIntoPathStack(){
+        int currentloc = bestLoc;
+        while(currentloc!=-1){
+            Node n = CheckedNodes.get(currentloc);
+            PathStack.add(n);
+            currentloc = CheckedNodes.findIndex(n.Weight.PreviousBlock);
+            if(currentloc==0)currentloc=-1;
+        }
 
-
-
-
-    
+    }
 
 }
