@@ -3,8 +3,10 @@ package com.chiefminingdad.autoplayer;
 import com.chiefminingdad.autoplayer.records.ChunksS2CConfirmation;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.particle.EndRodParticle;
 import net.minecraft.world.World;
 
 import static com.chiefminingdad.autoplayer.KeyBindingBuilder.*;
@@ -34,10 +36,10 @@ public class AutoPlayerClient implements ClientModInitializer {
 		this.screenManager.init();
 		this.moveUntil.init(this.moveUntil);
 
+        ParticleFactoryRegistry.getInstance().register(AutoPlayer.SPARKLE_PARTICLE, EndRodParticle.Factory::new);
 
 
-
-	}
+    }
     private void SetVars(){
         client = MinecraftClient.getInstance();
         if (client.player != null) {
@@ -47,7 +49,7 @@ public class AutoPlayerClient implements ClientModInitializer {
     }
 
     private void InitializeClasses(){
-        moveUntil = new MoveUntil(client,player);
         PathFinding = new PathFindingAlgo(player, world);
+        moveUntil = new MoveUntil(client,player,PathFinding);
     }
 }

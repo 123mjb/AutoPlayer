@@ -11,9 +11,11 @@ import org.lwjgl.glfw.GLFW;
 public class MoveUntil {
     public MinecraftClient Instance;
     public ClientPlayerEntity player;
+    public PathFindingAlgo Algorithm;
     public KeyBinding Jump;
     public KeyBinding Forwards;
     public boolean Move = false;
+    public boolean findPath = false;
     public float desiredRotation;
 	public int desiredX=Integer.MAX_VALUE;
 	public int desiredY=Integer.MAX_VALUE;
@@ -35,7 +37,8 @@ public class MoveUntil {
         }return Instance;
     }
 
-    MoveUntil(MinecraftClient client, ClientPlayerEntity Player){
+    MoveUntil(MinecraftClient client, ClientPlayerEntity Player, PathFindingAlgo algorithm){
+        Algorithm = algorithm;
         Instance = client;
         player = Player;
         if (player == null){
@@ -105,20 +108,20 @@ public class MoveUntil {
         this.desiredX = x;
         this.desiredY = y;
         this.desiredZ = z;
+        this.findPath = true;
+        this.Algorithm.FindPath(desiredX,desiredY,desiredZ);
     }
 
     public void MoveCorrectDirection(){
-        if (player!=null) {
-            if (this.Move) {
-                player.setYaw(this.desiredRotation);
-                if (desiredX != player.getX() | desiredY != player.getY() | desiredZ != player.getZ()) {
-                    getJump().setPressed(desiredY > player.getY());
-                    getForwards().setPressed(desiredX != player.getX() | desiredZ != player.getZ());
-                } else this.Move = false;
-            }
-        }else{
-            player = getInstance().player;
+        if (findPath){
+            findPath = !Algorithm.doPathFinding();
         }
-
+        else {
+            if (player != null) {
+                player.sendMessage(Text.of("hello"), false);
+            } else {
+                player = getInstance().player;
+            }
+        }
     }
 }

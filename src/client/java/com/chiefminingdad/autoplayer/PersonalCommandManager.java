@@ -11,8 +11,10 @@ import java.util.function.Function;
 public class PersonalCommandManager {
 
     public static void Register(String Name, Function<CommandContext<ServerCommandSource>, Integer> code) {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment)-> dispatcher.register(literal(Name).
-                then(argument("locs", new DesiredLocationArgumentType()).executes(code::apply))
-        ));
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment)-> {
+            dispatcher.register(literal(Name).
+                    then(argument("locs", new DesiredLocationArgumentType()).executes(code::apply))
+            );
+        });
     }
 }

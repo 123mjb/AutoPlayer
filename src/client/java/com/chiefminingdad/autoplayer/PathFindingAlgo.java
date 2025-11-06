@@ -63,6 +63,7 @@ public class PathFindingAlgo {
                 if(section == 2){
                     ConvertAllNodeListIntoPathStack();
                     PathBlocks = (BlockPos[]) PathStack.toArray();
+                    return true;
                 }
             }
             return false;
@@ -98,8 +99,6 @@ public class PathFindingAlgo {
      */
     public void FindPath(int x, int y, int z){
         X=x;Y=y;Z=z;
-        FindingPath = true;
-        FoundPath  = false;
     }
 
     /**
