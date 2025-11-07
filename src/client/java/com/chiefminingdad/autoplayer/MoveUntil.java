@@ -4,6 +4,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.server.command.ParticleCommand;
 import net.minecraft.text.Text;
 import com.chiefminingdad.autoplayer.CustomClassHolder.*;
 import org.lwjgl.glfw.GLFW;
@@ -86,7 +89,7 @@ public class MoveUntil {
     }
 
     public void init(MoveUntil moveUntil){
-        ClientTickEvents.END_CLIENT_TICK.register(client -> moveUntil.MoveCorrectDirection());
+        ClientTickEvents.END_CLIENT_TICK.register(moveUntil::MoveCorrectDirection);
     }
 
     /**
@@ -112,13 +115,18 @@ public class MoveUntil {
         this.Algorithm.FindPath(desiredX,desiredY,desiredZ);
     }
 
-    public void MoveCorrectDirection(){
+    float fl = 0;
+    public void MoveCorrectDirection(MinecraftClient cl){
+        fl++;
         if (findPath){
             findPath = !Algorithm.doPathFinding();
         }
         else {
             if (player != null) {
-                player.sendMessage(Text.of("hello"), false);
+                if (fl%20==0){
+                    player.getEntityWorld().addParticleClient(AutoPlayer.SPARKLE_PARTICLE,player.getX(), player.getY(),player.getZ(),0,0,0);
+                    player.sendMessage(Text.of("hello"), false);
+                }
             } else {
                 player = getInstance().player;
             }
