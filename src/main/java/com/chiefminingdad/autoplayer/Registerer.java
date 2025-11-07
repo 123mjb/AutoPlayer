@@ -39,7 +39,7 @@ public class Registerer {
 
         PlayerManager PM = context.server().getPlayerManager();
         if (PM.isOperator(Player.getPlayerConfigEntry())) {
-            WorldChunk chunk = Player.getEntityWorld().getChunk(p.getX(), p.getZ());
+            WorldChunk chunk = Player.getEntityWorld().getChunk(p.getX()>>4, p.getZ()>>4);
             ChunkDataS2CPacket Payload = new ChunkDataS2CPacket(chunk,chunk.getWorld().getLightingProvider(),new BitSet(),new BitSet());
             Player.networkHandler.sendPacket(Payload);
             ServerPlayNetworking.send(Player,new ChunksS2CConfirmation(true,p));

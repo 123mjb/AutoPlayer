@@ -69,7 +69,7 @@ public class BlockManager {
     public Supplier<@Nullable BlockState> getBlock(BlockPos pos){
         Chunk RequestedChunk = CurrentWorld.getChunk(pos);
         if (RequestedChunk==null){
-            ChunksC2SRequest Payload = new ChunksC2SRequest(pos.getX()>>4,pos.getZ()>>4);
+            ChunksC2SRequest Payload = new ChunksC2SRequest(pos);
             ClientPlayNetworking.send(Payload);
             return ()-> CurrentWorld.getChunk(pos).getBlockState(pos);
         }
