@@ -14,6 +14,7 @@ import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.NotNull;
 
 public class WeightFinder{
     ClientPlayerEntity Player;
@@ -42,23 +43,33 @@ public class WeightFinder{
     public WeightInfo findBottomWeight(BlockState UnderneathBlock, BlockPos UnderneathBlockPos){
         return WeightSwitches(UnderneathBlock,1,UnderneathBlockPos);
     }
-    public WeightInfo WeightSwitches(BlockState block,int WhichPredicament, BlockPos blockPos){
+    public WeightInfo WeightSwitches(@NotNull BlockState block, int WhichPredicament, BlockPos blockPos){
+        Block checkblock= block.getBlock();
         if(WhichPredicament==0){
-            Block checkblock= block.getBlock();
+
             if(checkblock==BlueIce)return new WeightInfo(4.376F);
             else if(checkblock==Ice|checkblock==FrostedIce|checkblock==PackedIce)return new WeightInfo(4.157F);
             else if(checkblock==SlimeBlock) return new WeightInfo(3.04F);
             else if(checkblock==HoneyBlock| checkblock== SoulSand) return new WeightInfo(2.508F);
+            else if(checkblock == Blocks.AIR)return new WeightInfo(6F);// Where to put Placing logic?
+            else return new WeightInfo(4.317F);
         }
         else if(WhichPredicament==1){
-            ItemBlockBreakingSpeed bestItem = getBestInventoryItemForBlock(Player.getInventory(),block,blockPos);
             WeightInfo temp = new WeightInfo();
-            temp.BottomBlock = bestItem;
+            if(checkblock == Blocks.AIR){
+                temp.BottomBlock = new AirBreaking();
+            }
+            else {
+                temp.BottomBlock = getBestInventoryItemForBlock(Player.getInventory(), block, blockPos);
+            }
             return temp;
         }else if(WhichPredicament==2){
-            ItemBlockBreakingSpeed bestItem = getBestInventoryItemForBlock(Player.getInventory(),block,blockPos);
             WeightInfo temp = new WeightInfo();
-            temp.TopBlock = bestItem;
+            if(checkblock == Blocks.AIR){
+                temp.TopBlock = new AirBreaking();
+            }else {
+                temp.TopBlock = getBestInventoryItemForBlock(Player.getInventory(), block, blockPos);
+            }
             return temp;
         }
         return new WeightInfo();
@@ -81,6 +92,9 @@ public class WeightFinder{
         BlockPos Pos;
         public ItemBlockBreakingSpeed(WorldView world, BlockState block, ItemStack item, PlayerEntity player,BlockPos pos){
             World = world;Blck = block; Item = item;Player=player; Pos = pos;
+        }
+        public ItemBlockBreakingSpeed(){
+
         }
 
         public float getSimpleSpeed(){
@@ -119,6 +133,21 @@ public class WeightFinder{
             return (this.getSimpleSpeed()<other.getSimpleSpeed());
         }
     }
+    public class AirBreaking extends  ItemBlockBreakingSpeed{
+        public AirBreaking() {
+
+        }
+
+        @Override
+        public float getFullSpeed() {
+            return 0F;
+        }
+        @Override
+        public float getSimpleSpeed() {
+            return 0F;
+        }
+    }
+
     public boolean canHarvest(BlockState state,ItemStack stack) {
         return !state.isToolRequired() || stack.isSuitableFor(state);
     }
@@ -151,7 +180,7 @@ public class WeightFinder{
             return TopBlock.getFullSpeed()+BottomBlock.getFullSpeed()+WalkingTime;
         }
 
-        public boolean lessThan(WeightInfo other){
+        public boolean lessThan(@NotNull WeightInfo other){
             return this.Total()<other.Total();
         }
 
@@ -171,6 +200,13 @@ public class WeightFinder{
             return false;
         }
     }
+    public static class StarterWeight extends WeightInfo{
+        @Override
+        public float Total() {
+            return 0.0F;
+        }
+    }
+
     public static class WorstWeight extends WeightInfo{
         @Override
         public float Total() {

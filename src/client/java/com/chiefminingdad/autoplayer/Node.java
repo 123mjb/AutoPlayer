@@ -2,6 +2,8 @@ package com.chiefminingdad.autoplayer;
 
 import com.chiefminingdad.autoplayer.BlockManager.BlockGetter;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.Contract;
@@ -18,7 +20,7 @@ public class Node {
     public float DistanceWeight;
     public boolean checked = false;
 
-    private static final float DistanceWeightAdjustmentFactor = 4;
+    private static final float DistanceWeightAdjustmentFactor = 20;
 
     public float getWeight() {
         return Weight.Total();
@@ -41,6 +43,24 @@ public class Node {
         return DistanceWeight + SpecificWeight;
     }
 
+    /**
+     * For First Node
+     * @param player so the nodes starts where the player is.
+     */
+    public Node (ClientPlayerEntity player) {
+        try {
+            Pos = player.getBlockPos();
+            X = Pos.getX();
+            Y = Pos.getY()-1;
+            Z = Pos.getZ();
+            Weight = new WeightFinder.StarterWeight();
+            DistanceWeight = 0.0F;
+            SpecificWeight = 0.0F;
+        }
+        catch (Exception e) {
+            player.sendMessage(Text.of(e.getMessage()), true);
+        }
+    }
 
     public Node(BlockPos pos) {
         Pos = pos;
@@ -82,7 +102,7 @@ public class Node {
                 }
             }
         }
-        return (BlockPos[]) allSurrounding.toArray();
+        return allSurrounding.toArray(BlockPos[]::new);
     }
 
     public ArrayList<Node> GetAllSurroundingNodes(int x, int y, int z, WeightFinder WF, BlockManager BM) {
@@ -92,7 +112,9 @@ public class Node {
 
         for (BlockPos Positions : PotentialBlocks) {
             WeightFinder.WeightInfo newWeight = findWeight(Pos, Positions, WF, BM);
+            AutoPlayer.LOGGER.info("Found weight {}", newWeight.Total());
             float newDistanceWeight = findDistanceWeight(Positions, x, y, z);
+            AutoPlayer.LOGGER.info("Found distance weight {}", newDistanceWeight);
             NewNodes.add(new Node(Positions, Weight.append(newWeight, Pos), newDistanceWeight));
         }
         return NewNodes;
@@ -108,21 +130,21 @@ public class Node {
             if(tryget.isEmpty()) {
                 return new WeightFinder.UnattainableWeight();
             }
-            if (!tryget.get()) {
+            if (tryget.get()) {
                 blockStates[0] = getters[0].getState();
             }
             tryget = getters[1].tryget(BM.Unavailable);
             if(tryget.isEmpty()) {
                 return new WeightFinder.UnattainableWeight();
             }
-            if (!tryget.get()) {
+            if (tryget.get()) {
                 blockStates[1] = getters[1].getState();
             }
             tryget = getters[2].tryget(BM.Unavailable);
             if(tryget.isEmpty()) {
                 return new WeightFinder.UnattainableWeight();
             }
-            if (!tryget.get()) {
+            if (tryget.get()) {
                 blockStates[2] = getters[2].getState();
             }
         }
@@ -139,10 +161,13 @@ public class Node {
     }
 
     public static float findDistanceWeight(BlockPos nextBlock, int X, int Y, int Z) {
-        return (float) Math.sqrt(
-                Math.pow((X != Integer.MAX_VALUE) ? X - nextBlock.getX() : 0, 2) +
-                        Math.pow((Y != Integer.MAX_VALUE) ? Y - nextBlock.getY() : 0, 2) +
-                        Math.pow((Z != Integer.MAX_VALUE) ? Z - nextBlock.getZ() : 0, 2)) / DistanceWeightAdjustmentFactor;
+        int x = X != Integer.MAX_VALUE?Math.abs(nextBlock.getX() - X):0;
+        int y = Y != Integer.MAX_VALUE?Math.abs(nextBlock.getY() - Y):0;
+        int z = Z != Integer.MAX_VALUE?Math.abs(nextBlock.getZ() - Z):0;
+
+        return ((float) Math.sqrt(
+                Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)) / 20) +
+                ((float) (x + y + z) / 15);
     }
 
     @Contract(" -> new")
@@ -155,19 +180,24 @@ public class Node {
     }
 
 
+
     public static class AllNodeList extends ArrayList<com.chiefminingdad.autoplayer.Node> {
 
         public int GetBestLocation() {
+            //player.sendMessage(Text.of("1"), false);
             Node BestNode = Node.worstNode();
             int BestLoc = -1;
             for (int i = 0; i < this.size(); i++) {
+                //player.sendMessage(Text.of("2"), false);
                 Node Current = this.get(i);
-                if (Current.getTotalWeight() < BestNode.getTotalWeight()&!Current.checked) {
+                if ((Current.getTotalWeight() < BestNode.getTotalWeight())&!Current.checked) {
                     BestNode = Current;
                     BestLoc = i;
+                    //player.sendMessage(Text.of("3"), false);
                 }
             }
             BestNode.checked = true;
+            //player.sendMessage(Text.of("4"), false);
             return BestLoc;
         }
 
@@ -185,19 +215,21 @@ public class Node {
          */
         public boolean AddAllSurroundingNodes(int centre, int X, int Y, int Z, WeightFinder WF,BlockManager BM) {
             boolean CouldntFindABlock = false;
-            for (Node newNode : this.get(centre).GetAllSurroundingNodes(X, Y, Z, WF,BM)) {
+            AutoPlayer.LOGGER.info("Add all surrounding nodes");
+            for (Node newNode : this.get(centre).GetAllSurroundingNodes(X, Y, Z, WF,BM)) {//stuck
+                AutoPlayer.LOGGER.info("Adding");
                 if (newNode.Weight.isUnattainable()){CouldntFindABlock=true;}
-                if (!this.contains(newNode)) {
-                    this.add(newNode);
-                }
-                else{
+                if (this.contains(newNode)) {
                     int oldNodeIndex = this.findIndex(newNode.Pos);
                     Node oldNode = this.get(oldNodeIndex);
-                    if (oldNode.getTotalWeight()<newNode.getTotalWeight()){
+                    if (oldNode.getTotalWeight()>newNode.getTotalWeight()){
                         this.set(oldNodeIndex,newNode);
                     }
+                } else {
+                    this.add(newNode);
                 }
             }
+            AutoPlayer.LOGGER.info("Added all surrounding nodes");
             return CouldntFindABlock;
         }
 
@@ -235,4 +267,5 @@ public class Node {
             return this.get(findIndex(p));
         }
     }
+
 }

@@ -84,7 +84,8 @@ public class MoveUntil {
             }
             source.sendFeedback(()-> Text.literal("Going To (%s,%s,%s)".formatted(locs.X,locs.Y,locs.Z)),false);
             SetVars(locs.X,locs.Y,locs.Z);
-            return 1;
+            //source.sendFeedback(()->Text.literal("Success"),false);
+            return 0;
         });
     }
 
@@ -111,8 +112,8 @@ public class MoveUntil {
         this.desiredX = x;
         this.desiredY = y;
         this.desiredZ = z;
-        this.findPath = true;
         this.Algorithm.FindPath(desiredX,desiredY,desiredZ);
+        this.findPath = true;
     }
 
     float fl = 0;
@@ -123,9 +124,10 @@ public class MoveUntil {
         }
         else {
             if (player != null) {
-                if (fl%20==0){
-                    player.getEntityWorld().addParticleClient(AutoPlayer.SPARKLE_PARTICLE,player.getX(), player.getY(),player.getZ(),0,0,0);
-                    player.sendMessage(Text.of("hello"), false);
+                if (fl%20<2){
+                    //player.sendMessage(Text.of("spawnParticlesOnPath"), false);
+                    Algorithm.spawnparticlesonpath(player.getEntityWorld());
+                    player.getEntityWorld().addParticleClient(AutoPlayer.SPARKLE_PARTICLE,player.getX(), player.getY()+1,player.getZ(),0,0,0);
                 }
             } else {
                 player = getInstance().player;

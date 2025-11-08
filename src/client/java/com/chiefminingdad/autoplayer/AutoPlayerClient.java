@@ -29,7 +29,7 @@ public class AutoPlayerClient implements ClientModInitializer {
         InitializeClasses();
 
         ClientPlayNetworking.registerGlobalReceiver(ChunksS2CConfirmation.ID,(payload,context)->{
-           if (!payload.canSend())PathFinding.blockManager.AddUnavailable(payload.BlockLoc());
+           if (!payload.canSend())PathFinding.getBlockManager().AddUnavailable(payload.BlockLoc());
         });
 
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
@@ -49,7 +49,7 @@ public class AutoPlayerClient implements ClientModInitializer {
     }
 
     private void InitializeClasses(){
-        PathFinding = new PathFindingAlgo(player, world);
+        PathFinding = new PathFindingAlgo(client);
         moveUntil = new MoveUntil(client,player,PathFinding);
     }
 }
