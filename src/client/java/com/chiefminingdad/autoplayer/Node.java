@@ -112,9 +112,9 @@ public class Node {
 
         for (BlockPos Positions : PotentialBlocks) {
             WeightFinder.WeightInfo newWeight = findWeight(Pos, Positions, WF, BM);
-            AutoPlayer.LOGGER.info("Found weight {}", newWeight.Total());
+            //AutoPlayer.LOGGER.info("Found weight {}", newWeight.Total());
             float newDistanceWeight = findDistanceWeight(Positions, x, y+1, z);
-            AutoPlayer.LOGGER.info("Found distance weight {}", newDistanceWeight);
+            //AutoPlayer.LOGGER.info("Found distance weight {}", newDistanceWeight);
             NewNodes.add(new Node(Positions, Weight.append(newWeight, Pos), newDistanceWeight));
         }
         return NewNodes;
@@ -215,9 +215,9 @@ public class Node {
          */
         public boolean AddAllSurroundingNodes(int centre, int X, int Y, int Z, WeightFinder WF,BlockManager BM) {
             boolean CouldntFindABlock = false;
-            AutoPlayer.LOGGER.info("Add all surrounding nodes");
+            //AutoPlayer.LOGGER.info("Add all surrounding nodes");
             for (Node newNode : this.get(centre).GetAllSurroundingNodes(X, Y, Z, WF,BM)) {//stuck
-                AutoPlayer.LOGGER.info("Adding");
+                //AutoPlayer.LOGGER.info("Adding");
                 if (newNode.Weight.isUnattainable()){CouldntFindABlock=true;}
                 if (this.contains(newNode)) {
                     int oldNodeIndex = this.findIndex(newNode.Pos);
@@ -229,7 +229,7 @@ public class Node {
                     this.add(newNode);
                 }
             }
-            AutoPlayer.LOGGER.info("Added all surrounding nodes");
+            //AutoPlayer.LOGGER.info("Added all surrounding nodes");
             return CouldntFindABlock;
         }
 

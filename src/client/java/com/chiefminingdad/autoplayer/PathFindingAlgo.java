@@ -90,12 +90,12 @@ public class PathFindingAlgo {
                     //AutoPlayer.LOGGER.info("Section:0");
                     bestLoc = CheckedNodes.GetBestLocation();//TODO:does it actually check if a node has already been used or update the weight when a better one is found
                     bestNode = CheckedNodes.get(bestLoc);
-                    AutoPlayer.LOGGER.debug("using {}",bestNode.getWeight());
+                    AutoPlayer.LOGGER.info("using {}",bestNode.getTotalWeight());
                     //AutoPlayer.LOGGER.info("5");
-                    if (BlockPosWorksForLoc(bestNode.Pos)) section = 2;
+                    if (BlockPosWorksForLoc(bestNode.Pos)){ section = 2;AutoPlayer.LOGGER.info("Finsiherd");}
                     else section = 1;
-                    //AutoPlayer.LOGGER.info("6");
-                    AutoPlayer.LOGGER.debug("%s,%s,%s".formatted(bestNode.Pos.getX(),bestNode.Pos.getY(),bestNode.Pos.getZ()));
+                    AutoPlayer.LOGGER.info("6");
+                    AutoPlayer.LOGGER.info("{},{},{}",bestNode.Pos.getX(),bestNode.Pos.getY(),bestNode.Pos.getZ());
                 }
                 if (section == 1) {
                     //AutoPlayer.LOGGER.info("Section:1");
@@ -111,7 +111,7 @@ public class PathFindingAlgo {
                     }
                 }
                 if (section == 2) {
-                    AutoPlayer.LOGGER.info("Section:2");
+                    //AutoPlayer.LOGGER.info("Section:2");
                     ConvertAllNodeListIntoPathStack();
 
                     PathBlocks = PathStack.toArray(PathBlocks);
@@ -124,9 +124,9 @@ public class PathFindingAlgo {
             return false;
     }
     public boolean BlockPosWorksForLoc(@NotNull BlockPos p){
-        AutoPlayer.LOGGER.info("BlockPosWorksForLoc");
+        //AutoPlayer.LOGGER.info("BlockPosWorksForLoc");
         boolean works = (X == Integer.MAX_VALUE | X == p.getX()) & (Y == Integer.MAX_VALUE | Y == p.getY()+1) & (Z == Integer.MAX_VALUE | Z == p.getZ());
-        AutoPlayer.LOGGER.info(String.valueOf(works));
+        //AutoPlayer.LOGGER.info(String.valueOf(works));
         return works;
     }
     public class addSurrounding implements Runnable{
@@ -143,7 +143,7 @@ public class PathFindingAlgo {
             else  section=0;
             RunningConcurrently = false;
             AddSurrounding = null;
-            AutoPlayer.LOGGER.info("addSurrounding Done");
+            //AutoPlayer.LOGGER.info("addSurrounding Done");
         }
     }
 
