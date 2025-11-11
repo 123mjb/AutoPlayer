@@ -113,7 +113,7 @@ public class Node {
         for (BlockPos Positions : PotentialBlocks) {
             WeightFinder.WeightInfo newWeight = findWeight(Pos, Positions, WF, BM);
             AutoPlayer.LOGGER.info("Found weight {}", newWeight.Total());
-            float newDistanceWeight = findDistanceWeight(Positions, x, y, z);
+            float newDistanceWeight = findDistanceWeight(Positions, x, y+1, z);
             AutoPlayer.LOGGER.info("Found distance weight {}", newDistanceWeight);
             NewNodes.add(new Node(Positions, Weight.append(newWeight, Pos), newDistanceWeight));
         }
@@ -165,9 +165,9 @@ public class Node {
         int y = Y != Integer.MAX_VALUE?Math.abs(nextBlock.getY() - Y):0;
         int z = Z != Integer.MAX_VALUE?Math.abs(nextBlock.getZ() - Z):0;
 
-        return ((float) Math.sqrt(
-                Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)) / 20) +
-                ((float) (x + y + z) / 15);
+        return (float) (((float) Math.sqrt(
+                        Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)) / 7.5) +
+                        ((float) (x + y + z) / 5));
     }
 
     @Contract(" -> new")

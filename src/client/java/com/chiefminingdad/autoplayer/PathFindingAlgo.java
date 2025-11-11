@@ -20,15 +20,32 @@ public class PathFindingAlgo {
     private BlockManager blockManager;
     private WeightFinder WF;
 
-    boolean FindingPath = false;
-    boolean FoundPath = false;
     int X,Y,Z;
 
+    public AllNodeList CheckedNodes = new AllNodeList();
+    private int section = 0;
+    private boolean RunningConcurrently = false;
+    int bestLoc;
+    Node bestNode;
+    addSurrounding AddSurrounding=null;
+    Thread CurrentRunning;
     Node[] PathBlocks = new Node[] {};
     Stack<Node> PathStack = new Stack<>();
 
     public PathFindingAlgo(MinecraftClient cl){
         mc = cl;
+    }
+
+    public void reset(){
+        CheckedNodes = new AllNodeList();
+        section = 0;
+        RunningConcurrently = false;
+        bestLoc = -1;
+        bestNode = null;
+        AddSurrounding=null;
+        CurrentRunning = null;
+        PathBlocks = new Node[] {};
+        PathStack = new Stack<>();
     }
 
     public BlockManager getBlockManager() {
@@ -59,14 +76,7 @@ public class PathFindingAlgo {
         return CurrentWorld;
     }
 
-    private boolean FindPath = false;
-    public AllNodeList CheckedNodes = new AllNodeList();
-    private int section = 0;
-    private boolean RunningConcurrently = false;
-    int bestLoc;
-    Node bestNode;
-    addSurrounding AddSurrounding=null;
-    Thread CurrentRunning;
+
 
     /**
      * Will do a section of code to find the most optimum path as to not spend too long on a tick.

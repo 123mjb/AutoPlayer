@@ -112,6 +112,7 @@ public class MoveUntil {
         this.desiredX = x;
         this.desiredY = y;
         this.desiredZ = z;
+        this.Algorithm.reset();
         this.Algorithm.FindPath(desiredX,desiredY,desiredZ);
         this.findPath = true;
     }
