@@ -138,7 +138,7 @@ public class PathFindingAlgo {
         @Override
         public void run() {
             if (CheckedNodes.AddAllSurroundingNodes(BestLoc, X, Y, Z,getWF(),getBlockManager())) {
-                section=2;
+                //section=2;
             }
             else  section=0;
             RunningConcurrently = false;
