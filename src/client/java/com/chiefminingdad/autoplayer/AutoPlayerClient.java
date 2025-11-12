@@ -20,7 +20,7 @@ public class AutoPlayerClient implements ClientModInitializer {
 	MoveUntil moveUntil;
     PathFindingAlgo PathFinding;
 	final ScreenManager screenManager = new ScreenManager();
-	KeyBindtoRunningCode Move2Secs;
+    DebugInfo debugInfo = new DebugInfo();
 
 
 	@Override
