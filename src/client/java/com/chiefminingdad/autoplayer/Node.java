@@ -34,7 +34,6 @@ public class Node {
     public float getTotalWeight() {
         return Weight.Total() + DistanceWeight;
     }
-
     public float getSpecificWeight() {
         return SpecificWeight;
     }
@@ -51,7 +50,7 @@ public class Node {
         try {
             Pos = player.getBlockPos();
             X = Pos.getX();
-            Y = Pos.getY()-1;
+            Y = Pos.getY();
             Z = Pos.getZ();
             Weight = new WeightFinder.StarterWeight();
             DistanceWeight = 0.0F;
@@ -71,13 +70,13 @@ public class Node {
         SpecificWeight = 0;
     }
 
-    public Node(BlockPos pos, WeightFinder.WeightInfo totalWeight, float specificWeight) {
+    public Node(BlockPos pos, WeightFinder.WeightInfo totalWeight, float distanceWeight) {
         Pos = pos;
         X = pos.getX();
         Y = pos.getY();
         Z = pos.getZ();
         Weight = totalWeight;
-        SpecificWeight = specificWeight;
+        DistanceWeight = distanceWeight;
     }
 
     public boolean setTotalWeight(WeightFinder.WeightInfo newWeight) {
@@ -113,7 +112,7 @@ public class Node {
         for (BlockPos Positions : PotentialBlocks) {
             WeightFinder.WeightInfo newWeight = findWeight(Pos, Positions, WF, BM);
             //AutoPlayer.LOGGER.info("Found weight {}", newWeight.Total());
-            float newDistanceWeight = findDistanceWeight(Positions, x, y+1, z);
+            float newDistanceWeight = findDistanceWeight(Positions, x, y, z);
             //AutoPlayer.LOGGER.info("Found distance weight {}", newDistanceWeight);
             NewNodes.add(new Node(Positions, Weight.append(newWeight, Pos), newDistanceWeight));
         }
@@ -122,7 +121,7 @@ public class Node {
 
     public WeightFinder.WeightInfo findWeight(BlockPos One, BlockPos Two, WeightFinder WF, BlockManager BM) {
         // TODO: Make only moderators be able to access chunks not yet loaded ingame
-        BlockGetter[] getters = new BlockGetter[]{new BlockGetter(Two,BM), new BlockGetter(Two.up(1),BM), new BlockGetter(Two.up(2),BM)};
+        BlockGetter[] getters = new BlockGetter[]{new BlockGetter(Two.down(),BM), new BlockGetter(Two,BM), new BlockGetter(Two.up(),BM)};
         BlockState[] blockStates = new BlockState[3];
         Optional<Boolean> tryget;
         while (blockStates[0] == null | blockStates[1] == null | blockStates[2] == null) {
@@ -161,13 +160,13 @@ public class Node {
     }
 
     public static float findDistanceWeight(BlockPos nextBlock, int X, int Y, int Z) {
-        int x = X != Integer.MAX_VALUE?Math.abs(nextBlock.getX() - X):0;
-        int y = Y != Integer.MAX_VALUE?Math.abs(nextBlock.getY() - Y):0;
-        int z = Z != Integer.MAX_VALUE?Math.abs(nextBlock.getZ() - Z):0;
+        float x = X != Integer.MAX_VALUE?Math.abs(nextBlock.getX() - X):0;
+        float y = Y != Integer.MAX_VALUE?Math.abs(nextBlock.getY() - Y):0;
+        float z = Z != Integer.MAX_VALUE?Math.abs(nextBlock.getZ() - Z):0;
 
-        return (float) (((float) Math.sqrt(
+        return (float) ((Math.sqrt(
                         Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)) / 7.5) +
-                        ((float) (x + y + z) / 5));
+                        ( (x + y + z) / 5));
     }
 
     @Contract(" -> new")

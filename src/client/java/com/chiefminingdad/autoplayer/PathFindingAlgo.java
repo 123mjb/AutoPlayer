@@ -90,12 +90,12 @@ public class PathFindingAlgo {
                     //AutoPlayer.LOGGER.info("Section:0");
                     bestLoc = CheckedNodes.GetBestLocation();//TODO:does it actually check if a node has already been used or update the weight when a better one is found
                     bestNode = CheckedNodes.get(bestLoc);
-                    AutoPlayer.LOGGER.info("using {}",bestNode.getTotalWeight());
+                    AutoPlayer.LOGGER.info("6");
+                    AutoPlayer.LOGGER.info("using {},Total:{},Distance:{}",bestNode.getTotalWeight(),bestNode.getWeight(),bestNode.DistanceWeight);
+                    AutoPlayer.LOGGER.info("{},{},{}",bestNode.Pos.getX(),bestNode.Pos.getY(),bestNode.Pos.getZ());
                     //AutoPlayer.LOGGER.info("5");
                     if (BlockPosWorksForLoc(bestNode.Pos)){ section = 2;AutoPlayer.LOGGER.info("Finsiherd");}
                     else section = 1;
-                    AutoPlayer.LOGGER.info("6");
-                    AutoPlayer.LOGGER.info("{},{},{}",bestNode.Pos.getX(),bestNode.Pos.getY(),bestNode.Pos.getZ());
                 }
                 if (section == 1) {
                     //AutoPlayer.LOGGER.info("Section:1");
@@ -111,7 +111,7 @@ public class PathFindingAlgo {
                     }
                 }
                 if (section == 2) {
-                    //AutoPlayer.LOGGER.info("Section:2");
+                    AutoPlayer.LOGGER.info("Section:2");
                     ConvertAllNodeListIntoPathStack();
 
                     PathBlocks = PathStack.toArray(PathBlocks);
@@ -125,7 +125,7 @@ public class PathFindingAlgo {
     }
     public boolean BlockPosWorksForLoc(@NotNull BlockPos p){
         //AutoPlayer.LOGGER.info("BlockPosWorksForLoc");
-        boolean works = (X == Integer.MAX_VALUE | X == p.getX()) & (Y == Integer.MAX_VALUE | Y == p.getY()+1) & (Z == Integer.MAX_VALUE | Z == p.getZ());
+        boolean works = (X == Integer.MAX_VALUE | X == p.getX()) & (Y == Integer.MAX_VALUE | Y == p.getY()) & (Z == Integer.MAX_VALUE | Z == p.getZ());
         //AutoPlayer.LOGGER.info(String.valueOf(works));
         return works;
     }
