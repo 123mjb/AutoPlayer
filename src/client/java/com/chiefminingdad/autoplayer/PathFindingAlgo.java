@@ -1,13 +1,11 @@
 package com.chiefminingdad.autoplayer;
 
 import com.chiefminingdad.autoplayer.Node.AllNodeList;
-import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.util.Cast;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Stack;
@@ -87,31 +85,42 @@ public class PathFindingAlgo {
             // TODO: Make it pause if a chunk is still being received. Should Do Now Check Code
             try {
                 if (section == 0) {
+                    AutoPlayerClient.debugInfo.Heading("PathFindingAlgo: Section 0");
                     //AutoPlayer.LOGGER.info("Section:0");
+                    AutoPlayerClient.debugInfo.SubHeading("GetBestLocation");
                     bestLoc = CheckedNodes.GetBestLocation();//TODO:does it actually check if a node has already been used or update the weight when a better one is found
                     bestNode = CheckedNodes.get(bestLoc);
                     AutoPlayer.LOGGER.info("6");
                     AutoPlayer.LOGGER.info("using {},Total:{},Distance:{}",bestNode.getTotalWeight(),bestNode.getWeight(),bestNode.DistanceWeight);
                     AutoPlayer.LOGGER.info("{},{},{}",bestNode.Pos.getX(),bestNode.Pos.getY(),bestNode.Pos.getZ());
                     //AutoPlayer.LOGGER.info("5");
+                    AutoPlayerClient.debugInfo.SubHeading("BlockPosWorks");
                     if (BlockPosWorksForLoc(bestNode.Pos)){ section = 2;AutoPlayer.LOGGER.info("Finsiherd");}
                     else section = 1;
                 }
                 if (section == 1) {
+                    AutoPlayerClient.debugInfo.Heading("PathFindingAlgo: Section 1");
                     //AutoPlayer.LOGGER.info("Section:1");
                     if (AddSurrounding == null) {
                         //AutoPlayer.LOGGER.info("Section:1.1");
+                        AutoPlayerClient.debugInfo.SubHeading("Making AddSurrounding");
                         AddSurrounding = new addSurrounding(bestLoc);
                     }
                     if (!RunningConcurrently) {
                         //AutoPlayer.LOGGER.info("Section:1.2");
+                        AutoPlayerClient.debugInfo.SubHeading("Starting AddSurrounding");
                         CurrentRunning = new Thread(AddSurrounding);
                         CurrentRunning.start();
                         RunningConcurrently = true;
                     }
+                    else{
+                        AutoPlayerClient.debugInfo.SubHeading("AddSurrounding Running");
+                    }
                 }
                 if (section == 2) {
+                    AutoPlayerClient.debugInfo.Heading("PathFindingAlgo: Section 2");
                     AutoPlayer.LOGGER.info("Section:2");
+                    AutoPlayerClient.debugInfo.SubHeading("ConvertNodeList");
                     ConvertAllNodeListIntoPathStack();
 
                     PathBlocks = PathStack.toArray(PathBlocks);

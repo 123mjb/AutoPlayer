@@ -12,15 +12,19 @@ import net.minecraft.world.World;
 import static com.chiefminingdad.autoplayer.KeyBindingBuilder.*;
 
 public class AutoPlayerClient implements ClientModInitializer {
-    MinecraftClient client;
-    ClientPlayerEntity player;
-    World world;
+    public MinecraftClient client;
+    public ClientPlayerEntity player;
+    public World world;
 
+    public MinecraftClient getClient() {
+        if(client==null)client = MinecraftClient.getInstance();
+        return client;
+    }
 
-	MoveUntil moveUntil;
+    MoveUntil moveUntil;
     PathFindingAlgo PathFinding;
 	final ScreenManager screenManager = new ScreenManager();
-    DebugInfo debugInfo = new DebugInfo();
+    public static DebugInfo debugInfo = new DebugInfo();
 
 
 	@Override
