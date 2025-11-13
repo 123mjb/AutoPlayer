@@ -104,6 +104,8 @@ public class WeightFinder{
             if (f > 1.0F) {
                 f += (float)this.Player.getAttributeValue(EntityAttributes.MINING_EFFICIENCY);
             }
+            if (h == 0F) return 0;
+            if (h == -1F) return Float.MAX_VALUE;
             return f/i/h;
         }
         public float getFullSpeed(){
@@ -129,7 +131,7 @@ public class WeightFinder{
 //            }
             return f;
         }
-        public boolean SimpleBetterThan(ItemBlockBreakingSpeed other){
+        public boolean SimpleBetterThan(@NotNull ItemBlockBreakingSpeed other){
             return (this.getSimpleSpeed()<other.getSimpleSpeed());
         }
     }
@@ -148,7 +150,7 @@ public class WeightFinder{
         }
     }
 
-    public boolean canHarvest(BlockState state,ItemStack stack) {
+    public boolean canHarvest(@NotNull BlockState state, ItemStack stack) {
         return !state.isToolRequired() || stack.isSuitableFor(state);
     }
 

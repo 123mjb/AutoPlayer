@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Stack;
 
+import static com.chiefminingdad.autoplayer.AutoPlayerClient.debugInfo;
+
 public class PathFindingAlgo {
     final MinecraftClient mc;
     private ClientPlayerEntity player;
@@ -84,43 +86,43 @@ public class PathFindingAlgo {
     public boolean doPathFinding(){
             // TODO: Make it pause if a chunk is still being received. Should Do Now Check Code
             try {
+//                int npos = CheckedNodes.findIndex(new BlockPos(0,-60,1));
+//                if (npos != -1) {
+//                    Node n = CheckedNodes.get(npos);
+//                    debugInfo.ShowNode(n);
+//                }
+
                 if (section == 0) {
-                    AutoPlayerClient.debugInfo.Heading("PathFindingAlgo: Section 0");
-                    //AutoPlayer.LOGGER.info("Section:0");
-                    AutoPlayerClient.debugInfo.SubHeading("GetBestLocation");
+                    debugInfo.Heading("PathFindingAlgo: Section 0");
+                    debugInfo.SubHeading("GetBestLocation");
                     bestLoc = CheckedNodes.GetBestLocation();//TODO:does it actually check if a node has already been used or update the weight when a better one is found
                     bestNode = CheckedNodes.get(bestLoc);
-                    AutoPlayer.LOGGER.info("6");
-                    AutoPlayer.LOGGER.info("using {},Total:{},Distance:{}",bestNode.getTotalWeight(),bestNode.getWeight(),bestNode.DistanceWeight);
-                    AutoPlayer.LOGGER.info("{},{},{}",bestNode.Pos.getX(),bestNode.Pos.getY(),bestNode.Pos.getZ());
-                    //AutoPlayer.LOGGER.info("5");
-                    AutoPlayerClient.debugInfo.SubHeading("BlockPosWorks");
+//                    AutoPlayer.LOGGER.info("using {},Total:{},Distance:{}",bestNode.getTotalWeight(),bestNode.getWeight(),bestNode.DistanceWeight);
+//                    AutoPlayer.LOGGER.info("{},{},{}",bestNode.Pos.getX(),bestNode.Pos.getY(),bestNode.Pos.getZ());
+                    debugInfo.SubHeading("BlockPosWorks");
                     if (BlockPosWorksForLoc(bestNode.Pos)){ section = 2;AutoPlayer.LOGGER.info("Finsiherd");}
                     else section = 1;
                 }
                 if (section == 1) {
-                    AutoPlayerClient.debugInfo.Heading("PathFindingAlgo: Section 1");
-                    //AutoPlayer.LOGGER.info("Section:1");
+                    debugInfo.Heading("PathFindingAlgo: Section 1");
                     if (AddSurrounding == null) {
-                        //AutoPlayer.LOGGER.info("Section:1.1");
-                        AutoPlayerClient.debugInfo.SubHeading("Making AddSurrounding");
+                        debugInfo.SubHeading("Making AddSurrounding");
                         AddSurrounding = new addSurrounding(bestLoc);
                     }
                     if (!RunningConcurrently) {
-                        //AutoPlayer.LOGGER.info("Section:1.2");
-                        AutoPlayerClient.debugInfo.SubHeading("Starting AddSurrounding");
+                        debugInfo.SubHeading("Starting AddSurrounding");
                         CurrentRunning = new Thread(AddSurrounding);
                         CurrentRunning.start();
                         RunningConcurrently = true;
                     }
                     else{
-                        AutoPlayerClient.debugInfo.SubHeading("AddSurrounding Running");
+                        debugInfo.SubHeading("AddSurrounding Running");
                     }
                 }
                 if (section == 2) {
-                    AutoPlayerClient.debugInfo.Heading("PathFindingAlgo: Section 2");
+                    debugInfo.Heading("PathFindingAlgo: Section 2");
                     AutoPlayer.LOGGER.info("Section:2");
-                    AutoPlayerClient.debugInfo.SubHeading("ConvertNodeList");
+                    debugInfo.SubHeading("ConvertNodeList");
                     ConvertAllNodeListIntoPathStack();
 
                     PathBlocks = PathStack.toArray(PathBlocks);
@@ -133,10 +135,7 @@ public class PathFindingAlgo {
             return false;
     }
     public boolean BlockPosWorksForLoc(@NotNull BlockPos p){
-        //AutoPlayer.LOGGER.info("BlockPosWorksForLoc");
-        boolean works = (X == Integer.MAX_VALUE | X == p.getX()) & (Y == Integer.MAX_VALUE | Y == p.getY()) & (Z == Integer.MAX_VALUE | Z == p.getZ());
-        //AutoPlayer.LOGGER.info(String.valueOf(works));
-        return works;
+        return (X == Integer.MAX_VALUE | X == p.getX()) & (Y == Integer.MAX_VALUE | Y == p.getY()) & (Z == Integer.MAX_VALUE | Z == p.getZ());
     }
     public class addSurrounding implements Runnable{
         int BestLoc;
@@ -215,9 +214,9 @@ public class PathFindingAlgo {
 
     }
 
-    public void spawnparticlesonpath(World world){
+    public void spawnParticlesOnPath(World world){
         for(Node n : PathBlocks){
-            world.addParticleClient(AutoPlayer.SPARKLE_PARTICLE,n.Pos.getX()+0.5,n.Pos.getY()+1.5,n.Pos.getZ()+0.5,0,0,0);
+            world.addParticleClient(AutoPlayer.SPARKLE_PARTICLE,n.Pos.getX()+0.5,n.Pos.getY()+0.5,n.Pos.getZ()+0.5,0,0,0);
         }
     }
 

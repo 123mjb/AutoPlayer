@@ -16,11 +16,8 @@ public class Node {
     public BlockPos Pos;
     private int X, Y, Z;
     public WeightFinder.WeightInfo Weight;
-    public float SpecificWeight;
     public float DistanceWeight;
     public boolean checked = false;
-
-    private static final float DistanceWeightAdjustmentFactor = 20;
 
     public float getWeight() {
         return Weight.Total();
@@ -33,13 +30,6 @@ public class Node {
      */
     public float getTotalWeight() {
         return Weight.Total() + DistanceWeight;
-    }
-    public float getSpecificWeight() {
-        return SpecificWeight;
-    }
-
-    public float getTotalSpecificWeight() {
-        return DistanceWeight + SpecificWeight;
     }
 
     /**
@@ -54,23 +44,21 @@ public class Node {
             Z = Pos.getZ();
             Weight = new WeightFinder.StarterWeight();
             DistanceWeight = 0.0F;
-            SpecificWeight = 0.0F;
         }
         catch (Exception e) {
             player.sendMessage(Text.of(e.getMessage()), true);
         }
     }
 
-    public Node(BlockPos pos) {
+    public Node(@NotNull BlockPos pos) {
         Pos = pos;
         X = pos.getX();
         Y = pos.getY();
         Z = pos.getZ();
         Weight = new WeightFinder.WeightInfo();
-        SpecificWeight = 0;
     }
 
-    public Node(BlockPos pos, WeightFinder.WeightInfo totalWeight, float distanceWeight) {
+    public Node(@NotNull BlockPos pos, WeightFinder.WeightInfo totalWeight, float distanceWeight) {
         Pos = pos;
         X = pos.getX();
         Y = pos.getY();
@@ -79,7 +67,7 @@ public class Node {
         DistanceWeight = distanceWeight;
     }
 
-    public boolean setTotalWeight(WeightFinder.WeightInfo newWeight) {
+    public boolean setTotalWeight(WeightFinder.@NotNull WeightInfo newWeight) {
         if (newWeight.lessThan(Weight)) {
             Weight = newWeight;
             return true;
@@ -95,7 +83,7 @@ public class Node {
         for (int dx = -1; dx < 2; dx++) {
             for (int dy = -1; dy < 2; dy++) {
                 for (int dz = -1; dz < 2; dz++) {
-                    if (dx != 0 & dy != 0 & dz != 0) {
+                    if (dx != 0 | dy != 0 | dz != 0) {
                         allSurrounding.add(new BlockPos(X + dx, Y + dy, Z + dz));
                     }
                 }
@@ -108,7 +96,6 @@ public class Node {
         BlockPos[] PotentialBlocks = getSurrounding();
         ArrayList<Node> NewNodes = new ArrayList<>();
 
-
         for (BlockPos Positions : PotentialBlocks) {
             WeightFinder.WeightInfo newWeight = findWeight(Pos, Positions, WF, BM);
             //AutoPlayer.LOGGER.info("Found weight {}", newWeight.Total());
@@ -119,7 +106,7 @@ public class Node {
         return NewNodes;
     }
 
-    public WeightFinder.WeightInfo findWeight(BlockPos One, BlockPos Two, WeightFinder WF, BlockManager BM) {
+    public WeightFinder.WeightInfo findWeight(BlockPos One, @NotNull BlockPos Two, WeightFinder WF, BlockManager BM) {
         // TODO: Make only moderators be able to access chunks not yet loaded ingame
         BlockGetter[] getters = new BlockGetter[]{new BlockGetter(Two.down(),BM), new BlockGetter(Two,BM), new BlockGetter(Two.up(),BM)};
         BlockState[] blockStates = new BlockState[3];
@@ -165,8 +152,8 @@ public class Node {
         float z = Z != Integer.MAX_VALUE?Math.abs(nextBlock.getZ() - Z):0;
 
         return (float) ((Math.sqrt(
-                        Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)) / 7.5) +
-                        ( (x + y + z) / 5));
+                        Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)) / 25) +
+                        ( (x + y + z) / 20));
     }
 
     @Contract(" -> new")
@@ -174,29 +161,21 @@ public class Node {
         return new Node(new BlockPos(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE), new WeightFinder.WorstWeight(), Float.MAX_VALUE);
     }
 
-    public float getDistanceWeightAdjustmentFactor() {
-        return DistanceWeightAdjustmentFactor;
-    }
-
 
 
     public static class AllNodeList extends ArrayList<com.chiefminingdad.autoplayer.Node> {
 
         public int GetBestLocation() {
-            //player.sendMessage(Text.of("1"), false);
             Node BestNode = Node.worstNode();
             int BestLoc = -1;
             for (int i = 0; i < this.size(); i++) {
-                //player.sendMessage(Text.of("2"), false);
                 Node Current = this.get(i);
                 if ((Current.getTotalWeight() < BestNode.getTotalWeight())&!Current.checked) {
                     BestNode = Current;
                     BestLoc = i;
-                    //player.sendMessage(Text.of("3"), false);
                 }
             }
             BestNode.checked = true;
-            //player.sendMessage(Text.of("4"), false);
             return BestLoc;
         }
 
@@ -217,7 +196,7 @@ public class Node {
             //AutoPlayer.LOGGER.info("Add all surrounding nodes");
             for (Node newNode : this.get(centre).GetAllSurroundingNodes(X, Y, Z, WF,BM)) {//stuck
                 //AutoPlayer.LOGGER.info("Adding");
-                if (newNode.Weight.isUnattainable()){CouldntFindABlock=true;}
+                if (newNode.Weight.isUnattainable()){CouldntFindABlock=true;continue;}
                 if (this.contains(newNode)) {
                     int oldNodeIndex = this.findIndex(newNode.Pos);
                     Node oldNode = this.get(oldNodeIndex);
