@@ -94,21 +94,25 @@ public class Node {
 
     public ArrayList<Node> GetAllSurroundingNodes(int x, int y, int z, WeightFinder WF, BlockManager BM) {
         BlockPos[] PotentialBlocks = getSurrounding();
-        ArrayList<Node> NewNodes = new ArrayList<>();
+        ArrayList<Node> NewNodes = new ArrayList<>();//Todo add debugging logging using new function in DebugInfo
 
         for (BlockPos Positions : PotentialBlocks) {
-            WeightFinder.WeightInfo newWeight = findWeight(Pos, Positions, WF, BM);
-            //AutoPlayer.LOGGER.info("Found weight {}", newWeight.Total());
+            WeightFinder.WeightInfo newWeight = findWeight(Positions, WF, BM);
             float newDistanceWeight = findDistanceWeight(Positions, x, y, z);
-            //AutoPlayer.LOGGER.info("Found distance weight {}", newDistanceWeight);
             NewNodes.add(new Node(Positions, Weight.append(newWeight, Pos), newDistanceWeight));
         }
         return NewNodes;
     }
 
-    public WeightFinder.WeightInfo findWeight(BlockPos One, @NotNull BlockPos Two, WeightFinder WF, BlockManager BM) {
-        // TODO: Make only moderators be able to access chunks not yet loaded ingame
-        BlockGetter[] getters = new BlockGetter[]{new BlockGetter(Two.down(),BM), new BlockGetter(Two,BM), new BlockGetter(Two.up(),BM)};
+    /**
+     * Finds the weight of walking through a block when given the BlockPos of the block the player would stand in.
+     * @param pos The BlockPos of the block the player would stand in.
+     * @param WF WeightFinder Instance to find Block Weights
+     * @param BM BlockManager Instance to find BlockStates
+     * @return The weight information for that block.
+     */
+    public WeightFinder.WeightInfo findWeight(@NotNull BlockPos pos, WeightFinder WF, BlockManager BM) {
+        BlockGetter[] getters = new BlockGetter[]{new BlockGetter(pos.down(),BM), new BlockGetter(pos,BM), new BlockGetter(pos.up(),BM)};
         BlockState[] blockStates = new BlockState[3];
         Optional<Boolean> tryget;
         while (blockStates[0] == null | blockStates[1] == null | blockStates[2] == null) {
@@ -135,9 +139,9 @@ public class Node {
             }
         }
         WeightFinder.WeightInfo[] weightInfos = new WeightFinder.WeightInfo[]{
-                WF.findBelowWeight(blockStates[0],Two),
-                WF.findBottomWeight(blockStates[1],Two.up(1)),
-                WF.findTopWeight(blockStates[2],Two.up(2))
+                WF.findBelowWeight(blockStates[0], pos),
+                WF.findBottomWeight(blockStates[1], pos.up(1)),
+                WF.findTopWeight(blockStates[2], pos.up(2))
         };
         WeightFinder.WeightInfo a = new WeightFinder.WeightInfo();
         a.merge(weightInfos[0]);
@@ -164,7 +168,10 @@ public class Node {
 
 
     public static class AllNodeList extends ArrayList<com.chiefminingdad.autoplayer.Node> {
-
+        /**
+         * Iterates over the list finding the best Node.
+         * @return The index of the lowest weight node in the list that hasn't been checked yet.
+         */
         public int GetBestLocation() {
             Node BestNode = Node.worstNode();
             int BestLoc = -1;
@@ -193,10 +200,10 @@ public class Node {
          */
         public boolean AddAllSurroundingNodes(int centre, int X, int Y, int Z, WeightFinder WF,BlockManager BM) {
             boolean CouldntFindABlock = false;
-            //AutoPlayer.LOGGER.info("Add all surrounding nodes");
-            for (Node newNode : this.get(centre).GetAllSurroundingNodes(X, Y, Z, WF,BM)) {//stuck
-                //AutoPlayer.LOGGER.info("Adding");
+            for (Node newNode : this.get(centre).GetAllSurroundingNodes(X, Y, Z, WF,BM)) {
+                //Checks if the chunk was completely unobtainable from the server.
                 if (newNode.Weight.isUnattainable()){CouldntFindABlock=true;continue;}
+                //Sees if the new one is better than the old if so, replaces it
                 if (this.contains(newNode)) {
                     int oldNodeIndex = this.findIndex(newNode.Pos);
                     Node oldNode = this.get(oldNodeIndex);
@@ -207,7 +214,6 @@ public class Node {
                     this.add(newNode);
                 }
             }
-            //AutoPlayer.LOGGER.info("Added all surrounding nodes");
             return CouldntFindABlock;
         }
 

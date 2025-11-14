@@ -10,11 +10,16 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.Stack;
+
 public class DebugInfo {
     boolean renderDebug = false;
     String debugHeading;
     String debugSubHeading;
     TextRenderer textRenderer;
+    ArrayDeque<String> queue = new ArrayDeque<>();
 
     public TextRenderer getTextRenderer() {
         if(textRenderer==null)textRenderer = MinecraftClient.getInstance().textRenderer;
@@ -24,7 +29,7 @@ public class DebugInfo {
     int black = 0xffffffff;
 
     public DebugInfo(){
-        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleDebug", GLFW.GLFW_KEY_F3,true,"autoplayerdebug",keybinding-> {if(keybinding.wasPressed()){renderDebug = !renderDebug;};});
+        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleDebug", GLFW.GLFW_KEY_M,true,"autoplayerdebug",keybinding-> {if(keybinding.wasPressed()){renderDebug = !renderDebug;};});
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Identifier.of(AutoPlayer.MOD_ID,"debuginfo"),this::render);
     }
     public void Heading(String text){
@@ -33,6 +38,9 @@ public class DebugInfo {
     public void SubHeading(String text){
         debugSubHeading= text;
     }
+    public void AddExtra(String text){
+        queue.add(text);
+    }
 
     public void render(DrawContext context, RenderTickCounter counter){
         if(renderDebug){
@@ -40,6 +48,11 @@ public class DebugInfo {
                 draw(context,debugHeading,0, context.getScaledWindowHeight()/2);
             if(debugSubHeading!=null)
                 draw(context,debugSubHeading,0, context.getScaledWindowHeight()/2+textRenderer.fontHeight);
+            int l = 1;
+            while(!queue.isEmpty()){
+                l++;
+                draw(context, queue.pop(), 0, context.getScaledWindowHeight()/2+l*textRenderer.fontHeight);
+            }
         }
     }
     public void draw(DrawContext ctxt,String txt, int x, int y){
