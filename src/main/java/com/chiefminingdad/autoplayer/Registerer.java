@@ -11,6 +11,7 @@ import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.WorldChunk;
@@ -39,6 +40,7 @@ public class Registerer {
 
         PlayerManager PM = context.server().getPlayerManager();
         if (PM.isOperator(Player.getPlayerConfigEntry())) {
+
             WorldChunk chunk = Player.getEntityWorld().getChunk(p.getX()>>4, p.getZ()>>4);
             ChunkDataS2CPacket Payload = new ChunkDataS2CPacket(chunk,chunk.getWorld().getLightingProvider(),new BitSet(),new BitSet());
             Player.networkHandler.sendPacket(Payload);
@@ -47,6 +49,7 @@ public class Registerer {
         else{
             ServerPlayNetworking.send(Player,new ChunksS2CConfirmation(false,p));
         }
+
         //TODO: Make it send info that the player is not moderator.
     }
 }

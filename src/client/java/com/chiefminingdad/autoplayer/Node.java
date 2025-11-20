@@ -116,21 +116,21 @@ public class Node {
         BlockState[] blockStates = new BlockState[3];
         Optional<Boolean> tryget;
         while (blockStates[0] == null | blockStates[1] == null | blockStates[2] == null) {
-            tryget = getters[0].tryget(BM.Unavailable);
+            tryget = getters[0].tryGet(BM.Unavailable);
             if(tryget.isEmpty()) {
                 return new WeightFinder.UnattainableWeight();
             }
             if (tryget.get()) {
                 blockStates[0] = getters[0].getState();
             }
-            tryget = getters[1].tryget(BM.Unavailable);
+            tryget = getters[1].tryGet(BM.Unavailable);
             if(tryget.isEmpty()) {
                 return new WeightFinder.UnattainableWeight();
             }
             if (tryget.get()) {
                 blockStates[1] = getters[1].getState();
             }
-            tryget = getters[2].tryget(BM.Unavailable);
+            tryget = getters[2].tryGet(BM.Unavailable);
             if(tryget.isEmpty()) {
                 return new WeightFinder.UnattainableWeight();
             }

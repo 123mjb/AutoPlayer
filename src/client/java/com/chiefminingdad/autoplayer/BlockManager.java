@@ -7,6 +7,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -50,13 +51,13 @@ public class BlockManager {
 
         /**
          */
-        public BlockGetter(BlockPos pos,BlockManager BM){
+        public BlockGetter(BlockPos pos, @NotNull BlockManager BM){
             Pos = pos;
             GetBlockState = BM.getBlock(pos);
         }
 
 
-        public Optional<Boolean> tryget(ArrayList<BlockPos> Unavailable){
+        public Optional<Boolean> tryGet(@NotNull ArrayList<BlockPos> Unavailable){
             if (Unavailable.contains(Pos)){return Optional.empty();}
             state = GetBlockState.get();
             return Optional.of(!(state==null));
