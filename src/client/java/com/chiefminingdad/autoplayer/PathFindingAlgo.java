@@ -3,11 +3,13 @@ package com.chiefminingdad.autoplayer;
 import com.chiefminingdad.autoplayer.Node.AllNodeList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import static com.chiefminingdad.autoplayer.AutoPlayerClient.debugInfo;
@@ -91,6 +93,9 @@ public class PathFindingAlgo {
 //                    Node n = CheckedNodes.get(npos);
 //                    debugInfo.ShowNode(n);
 //                }
+                if (debugInfo.renderDebug){
+
+                }
 
                 if (section == 0) {
                     debugInfo.Heading("PathFindingAlgo: Section 0");
@@ -120,6 +125,8 @@ public class PathFindingAlgo {
                     }
                 }
                 if (section == 2) {
+
+                    AutoPlayer.LOGGER.info(CheckedNodes.get(bestLoc).toString());
                     debugInfo.Heading("PathFindingAlgo: Section 2");
                     AutoPlayer.LOGGER.info("Section:2");
                     debugInfo.SubHeading("ConvertNodeList");
@@ -212,6 +219,11 @@ public class PathFindingAlgo {
             if(currentloc==0)currentloc=-1;
         }
 
+    }
+    public void spawnParticles(Node[] list,World world){
+        for(Node n : list){
+            world.addParticleClient(AutoPlayer.SPARKLE_PARTICLE,n.Pos.getX()+0.5,n.Pos.getY()+0.5,n.Pos.getZ()+0.5,0,0,0);
+        }
     }
 
     public void spawnParticlesOnPath(World world){

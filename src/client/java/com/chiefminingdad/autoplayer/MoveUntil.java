@@ -9,6 +9,10 @@ import com.chiefminingdad.autoplayer.CustomClassHolder.*;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
+
+import static com.chiefminingdad.autoplayer.AutoPlayerClient.debugInfo;
+
 public class MoveUntil {
     public MinecraftClient Instance;
     public ClientPlayerEntity player;
@@ -118,6 +122,9 @@ public class MoveUntil {
     float fl = 0;
     public void MoveCorrectDirection(MinecraftClient cl){
         fl++;
+        if (debugInfo.renderDebug){
+            Algorithm.spawnParticles(Algorithm.CheckedNodes.toArray(Algorithm.PathBlocks),player.getEntityWorld());
+        }
         if (findPath){
             findPath = !Algorithm.doPathFinding();
         }

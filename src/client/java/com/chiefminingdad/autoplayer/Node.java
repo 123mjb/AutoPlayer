@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
+import static com.chiefminingdad.autoplayer.AutoPlayerClient.debugInfo;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -16,7 +16,7 @@ public class Node {
     public BlockPos Pos;
     private int X, Y, Z;
     public WeightFinder.WeightInfo Weight;
-    public float DistanceWeight;
+    public float HeuristicWeight;
     public boolean checked = false;
 
     public float getWeight() {
@@ -28,8 +28,29 @@ public class Node {
      *
      * @return The sum of the weight + the distance weight
      */
-    public float getTotalWeight() {
-        return Weight.Total() + DistanceWeight;
+    public float getTotalFWeight() {
+        return Weight.Total() + HeuristicWeight;
+    }
+    public float getFinalWeight() {
+        return Weight.Total();
+    }
+    public Node setchecked(boolean checked) {
+        this.checked = checked;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "checked=" + checked +
+                ", Pos=" + Pos.toString() +
+                ", X=" + X +
+                ", Y=" + Y +
+                ", Z=" + Z +
+                ", Weight=" + Weight.toString() +
+                ", DistanceWeight=" + HeuristicWeight +
+                ", Total Weight=" + getFinalWeight() +
+                '}';
     }
 
     /**
@@ -43,7 +64,7 @@ public class Node {
             Y = Pos.getY();
             Z = Pos.getZ();
             Weight = new WeightFinder.StarterWeight();
-            DistanceWeight = 0.0F;
+            HeuristicWeight = 0.0F;
         }
         catch (Exception e) {
             player.sendMessage(Text.of(e.getMessage()), true);
@@ -58,13 +79,13 @@ public class Node {
         Weight = new WeightFinder.WeightInfo();
     }
 
-    public Node(@NotNull BlockPos pos, WeightFinder.WeightInfo totalWeight, float distanceWeight) {
+    public Node(@NotNull BlockPos pos, WeightFinder.WeightInfo totalWeight, float heuristicWeight) {
         Pos = pos;
         X = pos.getX();
         Y = pos.getY();
         Z = pos.getZ();
         Weight = totalWeight;
-        DistanceWeight = distanceWeight;
+        HeuristicWeight = heuristicWeight;
     }
 
     public boolean setTotalWeight(WeightFinder.@NotNull WeightInfo newWeight) {
@@ -98,8 +119,10 @@ public class Node {
 
         for (BlockPos Positions : PotentialBlocks) {
             WeightFinder.WeightInfo newWeight = findWeight(Positions, WF, BM);
-            float newDistanceWeight = findDistanceWeight(Positions, x, y, z);
-            NewNodes.add(new Node(Positions, Weight.append(newWeight, Pos), newDistanceWeight));
+            float newHeuristicWeight = findHeuristicWeight(Positions, x, y, z);
+            Node n =new Node(Positions, Weight.append(newWeight, Pos), newHeuristicWeight);
+            NewNodes.add(n);
+            debugInfo.AddExtra(n.toString());
         }
         return NewNodes;
     }
@@ -150,7 +173,7 @@ public class Node {
         return a;
     }
 
-    public static float findDistanceWeight(BlockPos nextBlock, int X, int Y, int Z) {
+    public static float findHeuristicWeight(BlockPos nextBlock, int X, int Y, int Z) {
         float x = X != Integer.MAX_VALUE?Math.abs(nextBlock.getX() - X):0;
         float y = Y != Integer.MAX_VALUE?Math.abs(nextBlock.getY() - Y):0;
         float z = Z != Integer.MAX_VALUE?Math.abs(nextBlock.getZ() - Z):0;
@@ -177,7 +200,7 @@ public class Node {
             int BestLoc = -1;
             for (int i = 0; i < this.size(); i++) {
                 Node Current = this.get(i);
-                if ((Current.getTotalWeight() < BestNode.getTotalWeight())&!Current.checked) {
+                if ((Current.getTotalFWeight() < BestNode.getTotalFWeight())&!Current.checked) {
                     BestNode = Current;
                     BestLoc = i;
                 }
@@ -207,8 +230,8 @@ public class Node {
                 if (this.contains(newNode)) {
                     int oldNodeIndex = this.findIndex(newNode.Pos);
                     Node oldNode = this.get(oldNodeIndex);
-                    if (oldNode.getTotalWeight()>newNode.getTotalWeight()){
-                        this.set(oldNodeIndex,newNode);
+                    if (oldNode.getFinalWeight()>newNode.getFinalWeight()){
+                        this.set(oldNodeIndex,newNode.setchecked(oldNode.checked));
                     }
                 } else {
                     this.add(newNode);
@@ -227,15 +250,18 @@ public class Node {
          */
         public boolean contains(Node o) {
             for (Node node : this) {
-                if (node.Pos == o.Pos) {
+                if (PosEquals(node.Pos , o.Pos)) {
                     return true;
                 }
             }
             return false;
         }
+        public boolean PosEquals(BlockPos pos1,BlockPos pos2){
+            return pos1.getX() == pos2.getX() & pos1.getY() == pos2.getY() & pos1.getZ() == pos2.getZ();
+        }
         public int findIndex(BlockPos p){
             for(int i = 0; i < this.size(); i++){
-                if(this.get(i).Pos == p){
+                if(PosEquals(this.get(i).Pos, p)){
                     return i;
                 }
             }

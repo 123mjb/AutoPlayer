@@ -47,12 +47,12 @@ public class WeightFinder{
         Block checkblock= block.getBlock();
         if(WhichPredicament==0){
 
-            if(checkblock==BlueIce)return new WeightInfo(4.376F);
-            else if(checkblock==Ice|checkblock==FrostedIce|checkblock==PackedIce)return new WeightInfo(4.157F);
-            else if(checkblock==SlimeBlock) return new WeightInfo(3.04F);
-            else if(checkblock==HoneyBlock| checkblock== SoulSand) return new WeightInfo(2.508F);
-            else if(checkblock == Blocks.AIR)return new WeightInfo(6F);// Where to put Placing logic?
-            else return new WeightInfo(4.317F);
+            if(checkblock==BlueIce)return new WeightInfo(1/4.376F);
+            else if(checkblock==Ice|checkblock==FrostedIce|checkblock==PackedIce)return new WeightInfo(1/4.157F);
+            else if(checkblock==SlimeBlock) return new WeightInfo(1/3.04F);
+            else if(checkblock==HoneyBlock| checkblock== SoulSand) return new WeightInfo(1/2.508F);
+            else if(checkblock == Blocks.AIR)return new WeightInfo(10F);// Where to put Placing logic?
+            else return new WeightInfo(1/4.317F);
         }
         else if(WhichPredicament==1){
             WeightInfo temp = new WeightInfo();
@@ -95,6 +95,16 @@ public class WeightFinder{
         }
         public ItemBlockBreakingSpeed(){
 
+        }
+
+        @Override
+        public String toString() {
+            return "ItemBlockBreakingSpeed{" +
+                    (Item!=null? ("Item=" + Item):"") +
+                    (Blck!=null?(", Blck=" + Blck):"") +
+                    (Player!=null?(", Player=" + Player):"") +
+                    ", Pos=" + Pos +
+                    '}';
         }
 
         public float getSimpleSpeed(){
@@ -178,8 +188,19 @@ public class WeightFinder{
         public WeightInfo(){
         }
 
+        @Override
+        public String toString() {
+            return "WeightInfo{" +
+                    "TopBlock=" + TopBlock.toString() +
+                    ", BottomBlock=" + BottomBlock.toString() +
+                    ", WalkingTime=" + WalkingTime +
+                    ", PreviousBlock=" + PreviousBlock.toString() +
+                    ", PreviousWeight=" + PreviousWeight +
+                    '}';
+        }
+
         public float Total(){
-            return TopBlock.getFullSpeed()+BottomBlock.getFullSpeed()+WalkingTime;
+            return PreviousWeight + TopBlock.getFullSpeed()+BottomBlock.getFullSpeed()+WalkingTime;
         }
 
         public boolean lessThan(@NotNull WeightInfo other){
