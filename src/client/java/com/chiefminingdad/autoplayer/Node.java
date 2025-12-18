@@ -15,7 +15,7 @@ import java.util.Optional;
 public class Node {
     public BlockPos Pos;
     private int X, Y, Z;
-    public WeightFinder.WeightInfo Weight;
+    public WeightInfo Weight;
     public float HeuristicWeight;
     public boolean checked = false;
 
@@ -76,10 +76,10 @@ public class Node {
         X = pos.getX();
         Y = pos.getY();
         Z = pos.getZ();
-        Weight = new WeightFinder.WeightInfo();
+        Weight = new WeightInfo();
     }
 
-    public Node(@NotNull BlockPos pos, WeightFinder.WeightInfo totalWeight, float heuristicWeight) {
+    public Node(@NotNull BlockPos pos, WeightInfo totalWeight, float heuristicWeight) {
         Pos = pos;
         X = pos.getX();
         Y = pos.getY();
@@ -88,7 +88,7 @@ public class Node {
         HeuristicWeight = heuristicWeight;
     }
 
-    public boolean setTotalWeight(WeightFinder.@NotNull WeightInfo newWeight) {
+    public boolean setTotalWeight(@NotNull WeightInfo newWeight) {
         if (newWeight.lessThan(Weight)) {
             Weight = newWeight;
             return true;
@@ -118,7 +118,7 @@ public class Node {
         ArrayList<Node> NewNodes = new ArrayList<>();//Todo add debugging logging using new function in DebugInfo
 
         for (BlockPos Positions : PotentialBlocks) {
-            WeightFinder.WeightInfo newWeight = findWeight(Positions, WF, BM);
+            WeightInfo newWeight = findWeight(Positions, WF, BM);
             float newHeuristicWeight = findHeuristicWeight(Positions, x, y, z);
             Node n =new Node(Positions, Weight.append(newWeight, Pos), newHeuristicWeight);
             NewNodes.add(n);
@@ -134,7 +134,7 @@ public class Node {
      * @param BM BlockManager Instance to find BlockStates
      * @return The weight information for that block.
      */
-    public WeightFinder.WeightInfo findWeight(@NotNull BlockPos pos, WeightFinder WF, BlockManager BM) {
+    public WeightInfo findWeight(@NotNull BlockPos pos, WeightFinder WF, BlockManager BM) {
         BlockGetter[] getters = new BlockGetter[]{new BlockGetter(pos.down(),BM), new BlockGetter(pos,BM), new BlockGetter(pos.up(),BM)};
         BlockState[] blockStates = new BlockState[3];
         Optional<Boolean> tryget;
@@ -161,12 +161,12 @@ public class Node {
                 blockStates[2] = getters[2].getState();
             }
         }
-        WeightFinder.WeightInfo[] weightInfos = new WeightFinder.WeightInfo[]{
+        WeightInfo[] weightInfos = new WeightInfo[]{
                 WF.findBelowWeight(blockStates[0], pos),
                 WF.findBottomWeight(blockStates[1], pos.up(1)),
                 WF.findTopWeight(blockStates[2], pos.up(2))
         };
-        WeightFinder.WeightInfo a = new WeightFinder.WeightInfo();
+        WeightInfo a = new WeightInfo();
         a.merge(weightInfos[0]);
         a.merge(weightInfos[1]);
         a.merge(weightInfos[2]);
