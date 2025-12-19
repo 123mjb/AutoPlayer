@@ -161,16 +161,7 @@ public class Node {
                 blockStates[2] = getters[2].getState();
             }
         }
-        WeightInfo[] weightInfos = new WeightInfo[]{
-                WF.findBelowWeight(blockStates[0], pos),
-                WF.findBottomWeight(blockStates[1], pos.up(1)),
-                WF.findTopWeight(blockStates[2], pos.up(2))
-        };
-        WeightInfo a = new WeightInfo();
-        a.merge(weightInfos[0]);
-        a.merge(weightInfos[1]);
-        a.merge(weightInfos[2]);
-        return a;
+        return new WeightInfo(WF.findMiningWeight(blockStates[2],pos.up()),WF.findMiningWeight(blockStates[1],pos),WF.findWalkingWeight(blockStates[0],pos.down()));
     }
 
     public static float findHeuristicWeight(BlockPos nextBlock, int X, int Y, int Z) {
