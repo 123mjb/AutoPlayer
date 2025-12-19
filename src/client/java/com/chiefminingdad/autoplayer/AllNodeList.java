@@ -1,7 +1,9 @@
 package com.chiefminingdad.autoplayer;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -9,6 +11,17 @@ import java.util.ArrayList;
 import static com.chiefminingdad.autoplayer.AutoPlayerClient.debugInfo;
 
 public class AllNodeList extends ArrayList<Node> {
+    int BottomY;
+    int TopY;
+
+    private void setMaxMinHeight() {
+        World world = MinecraftClient.getInstance().world;
+        if (world != null) {
+            assert world != null;
+            BottomY = world.getBottomY();
+            TopY = world.getBottomY() + world.getHeight();
+        }
+    }
     /**
      * Iterates over the list finding the best Node.
      *
@@ -64,18 +77,20 @@ public class AllNodeList extends ArrayList<Node> {
         AddAllSurroundingNodes(centre, Destined.getX(), Destined.getY(), Destined.getZ(), WF, BM);
     }
 
-    public ArrayList<Node> GetAllSurroundingNodes(Node CentreNode,int x, int y, int z, WeightFinder WF, BlockManager BM) {
+    public ArrayList<Node> GetAllSurroundingNodes(@NotNull Node CentreNode, int x, int y, int z, WeightFinder WF, BlockManager BM) {
+        setMaxMinHeight();
+
         BlockPos[] PotentialBlocks = CentreNode.getSurrounding();
         ArrayList<Node> NewNodes = new ArrayList<>();//Todo add debugging logging using new function in DebugInfo
 
         for (BlockPos pos : PotentialBlocks) {
-            if (!(this.contains(pos)&this.findNode(pos).checked)){
-                WeightInfo newWeight = CentreNode.findWeight(pos, WF, BM);
-                float newHeuristicWeight = Node.findHeuristicWeight(pos, x, y, z);
-                Node n = new Node(pos, CentreNode.Weight.append(newWeight, CentreNode.Pos), newHeuristicWeight);
-                NewNodes.add(n);
-                debugInfo.AddExtra(n.toString());
-            }
+            if (!(BottomY<pos.getY() & pos.getY()<TopY)) continue;
+            if ((this.contains(pos))){if (this.findNode(pos).checked){continue;}}
+            WeightInfo newWeight = CentreNode.findWeight(pos, WF, BM);
+            float newHeuristicWeight = Node.findHeuristicWeight(pos, x, y, z);
+            Node n = new Node(pos, CentreNode.Weight.append(newWeight), newHeuristicWeight);
+            NewNodes.add(n);
+            debugInfo.AddExtra(n.getWeight() +" "+n.HeuristicWeight);//n.toString());
         }
         return NewNodes;
     }
@@ -107,7 +122,7 @@ public class AllNodeList extends ArrayList<Node> {
         return false;
     }
 
-    public boolean PosEquals(BlockPos pos1, BlockPos pos2) {
+    public boolean PosEquals(@NotNull BlockPos pos1, @NotNull BlockPos pos2) {
         return pos1.getX() == pos2.getX() & pos1.getY() == pos2.getY() & pos1.getZ() == pos2.getZ();
     }
 
@@ -120,7 +135,7 @@ public class AllNodeList extends ArrayList<Node> {
         return -1;
     }
 
-    public int findIndex(Node o) {
+    public int findIndex(@NotNull Node o) {
         return findIndex(o.Pos);
     }
 

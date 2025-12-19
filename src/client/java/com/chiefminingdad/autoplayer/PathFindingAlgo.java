@@ -209,12 +209,12 @@ public class PathFindingAlgo {
         while(currentloc!=-1){
             Node n = AllNodes.get(currentloc);
             PathStack.add(n);
-            currentloc = AllNodes.findIndex(n.Weight.PreviousBlock);
+            currentloc = AllNodes.findIndex(n.Weight.getPreviousBlock());
             if(currentloc==0)currentloc=-1;
         }
 
     }
-    public void spawnParticles(Node[] list,World world){
+    public void spawnParticles(Node @NotNull [] list, World world){
         for(Node n : list){
             world.addParticleClient(AutoPlayer.SPARKLE_PARTICLE,n.Pos.getX()+0.5,n.Pos.getY()+0.5,n.Pos.getZ()+0.5,0,0,0);
         }

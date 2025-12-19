@@ -5,10 +5,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import static com.chiefminingdad.autoplayer.AutoPlayerClient.debugInfo;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -20,7 +20,7 @@ public class Node {
     public boolean checked = false;
 
     public float getWeight() {
-        return Weight.Total();
+        return Weight.getTotal();
     }
 
     /**
@@ -29,10 +29,10 @@ public class Node {
      * @return The sum of the weight + the distance weight
      */
     public float getTotalFWeight() {
-        return Weight.Total() + HeuristicWeight;
+        return Weight.getTotal() + HeuristicWeight;
     }
     public float getFinalWeight() {
-        return Weight.Total();
+        return Weight.getTotal();
     }
     public Node setchecked(boolean checked) {
         this.checked = checked;
@@ -145,7 +145,7 @@ public class Node {
                 blockStates[2] = getters[2].getState();
             }
         }
-        return new WeightInfo(WF.findMiningWeight(blockStates[2],pos.up()),WF.findMiningWeight(blockStates[1],pos),WF.findWalkingWeight(blockStates[0],pos.down()));
+        return new WeightInfo(pos,WF.findMiningWeight(blockStates[2],pos.up()),WF.findMiningWeight(blockStates[1],pos),WF.findWalkingWeight(blockStates[0],pos.down()));
     }
 
     public static float findHeuristicWeight(BlockPos nextBlock, int X, int Y, int Z) {

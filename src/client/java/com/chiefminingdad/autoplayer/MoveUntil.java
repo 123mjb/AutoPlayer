@@ -124,7 +124,9 @@ public class MoveUntil {
             Algorithm.spawnParticles(Algorithm.AllNodes.toArray(Algorithm.PathBlocks),player.getEntityWorld());
         }
         if (findPath){
-            findPath = !Algorithm.doPathFinding();
+            if (Move) {
+                findPath = !Algorithm.doPathFinding();
+            }
         }
         else {
             if (player != null) {

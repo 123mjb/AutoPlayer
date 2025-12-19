@@ -28,7 +28,7 @@ public class WeightFinder{
     private final Block SoulSand = Blocks.SOUL_SAND;
 
     public float findWalkingWeight(BlockState block, BlockPos blockPos){
-        Block checkblock= block.getBlock();
+        Block checkblock = block.getBlock();
         if(checkblock==BlueIce)return 1/4.376F;
         else if(checkblock==Ice|checkblock==FrostedIce|checkblock==PackedIce)return 1/4.157F;
         else if(checkblock==SlimeBlock) return 1/3.04F;
@@ -72,14 +72,14 @@ public class WeightFinder{
 
     public static class StarterWeight extends WeightInfo{
         @Override
-        public float Total() {
+        public float getTotal() {
             return 0.0F;
         }
     }
 
     public static class WorstWeight extends WeightInfo{
         @Override
-        public float Total() {
+        public float getTotal() {
             return Float.MAX_VALUE;
         }
     }

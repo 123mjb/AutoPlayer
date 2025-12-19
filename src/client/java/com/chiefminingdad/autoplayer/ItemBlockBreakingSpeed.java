@@ -44,7 +44,7 @@ public class ItemBlockBreakingSpeed{
         if (f > 1.0F) {
             f += (float)this.Player.getAttributeValue(EntityAttributes.MINING_EFFICIENCY);
         }
-        if (h == 0F) return 0;
+        if (h == 0F) return 0F;
         if (h == -1F) return Float.MAX_VALUE;
         return f/i/h;
     }
