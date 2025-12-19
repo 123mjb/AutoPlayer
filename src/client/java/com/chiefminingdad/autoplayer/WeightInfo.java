@@ -16,16 +16,12 @@ public class WeightInfo {
         WalkingTime = walkingTime;
     }
 
-    public WeightInfo(ItemBlockBreakingSpeed ItemSpeedTop, ItemBlockBreakingSpeed ItemSpeedBottom, float walkingTime, BlockPos previousPos, float previousweight) {
+    public WeightInfo(ItemBlockBreakingSpeed ItemSpeedTop, ItemBlockBreakingSpeed ItemSpeedBottom, float walkingTime, BlockPos previousPos, float previousWeight) {
         TopBlock = ItemSpeedTop;
         BottomBlock = ItemSpeedBottom;
         WalkingTime = walkingTime;
-        PreviousWeight = previousweight;
+        PreviousWeight = previousWeight;
         PreviousBlock = previousPos;
-    }
-
-    public WeightInfo(float walkingTime) {
-        WalkingTime = walkingTime;
     }
 
     public WeightInfo() {
@@ -50,17 +46,10 @@ public class WeightInfo {
         return this.Total() < other.Total();
     }
 
-    public WeightInfo append(WeightInfo newLocation, BlockPos oldPos) {
-        WeightInfo temp = newLocation;
-        temp.PreviousWeight = Total();
-        temp.PreviousBlock = oldPos;
-        return temp;
-    }
-
-    public void merge(WeightInfo otherweights) {
-        if (TopBlock == null) TopBlock = otherweights.TopBlock;
-        if (BottomBlock == null) BottomBlock = otherweights.BottomBlock;
-        if (WalkingTime == -1.0F) WalkingTime = otherweights.WalkingTime;
+    public WeightInfo append(@NotNull WeightInfo newLocation, BlockPos oldPos) {
+        newLocation.PreviousWeight = Total();
+        newLocation.PreviousBlock = oldPos;
+        return newLocation;
     }
 
     public boolean isUnattainable() {

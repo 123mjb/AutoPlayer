@@ -1,15 +1,12 @@
 package com.chiefminingdad.autoplayer;
 
-import com.chiefminingdad.autoplayer.Node.AllNodeList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Stack;
 
 import static com.chiefminingdad.autoplayer.AutoPlayerClient.debugInfo;
@@ -24,7 +21,7 @@ public class PathFindingAlgo {
 
     int X,Y,Z;
 
-    public AllNodeList CheckedNodes = new AllNodeList();
+    public AllNodeList AllNodes = new AllNodeList();
     private int section = 0;
     private boolean RunningConcurrently = false;
     int bestLoc;
@@ -39,7 +36,7 @@ public class PathFindingAlgo {
     }
 
     public void reset(){
-        CheckedNodes = new AllNodeList();
+        AllNodes = new AllNodeList();
         section = 0;
         RunningConcurrently = false;
         bestLoc = -1;
@@ -93,15 +90,11 @@ public class PathFindingAlgo {
 //                    Node n = CheckedNodes.get(npos);
 //                    debugInfo.ShowNode(n);
 //                }
-                if (debugInfo.renderDebug){
-
-                }
-
                 if (section == 0) {
                     debugInfo.Heading("PathFindingAlgo: Section 0");
                     debugInfo.SubHeading("GetBestLocation");
-                    bestLoc = CheckedNodes.GetBestLocation();//TODO:does it actually check if a node has already been used or update the weight when a better one is found
-                    bestNode = CheckedNodes.get(bestLoc);
+                    bestLoc = AllNodes.GetBestLocation();//TODO:does it actually check if a node has already been used or update the weight when a better one is found
+                    bestNode = AllNodes.get(bestLoc);
 //                    AutoPlayer.LOGGER.info("using {},Total:{},Distance:{}",bestNode.getTotalWeight(),bestNode.getWeight(),bestNode.DistanceWeight);
 //                    AutoPlayer.LOGGER.info("{},{},{}",bestNode.Pos.getX(),bestNode.Pos.getY(),bestNode.Pos.getZ());
                     debugInfo.SubHeading("BlockPosWorks");
@@ -126,7 +119,7 @@ public class PathFindingAlgo {
                 }
                 if (section == 2) {
 
-                    AutoPlayer.LOGGER.info(CheckedNodes.get(bestLoc).toString());
+                    AutoPlayer.LOGGER.info(AllNodes.get(bestLoc).toString());
                     debugInfo.Heading("PathFindingAlgo: Section 2");
                     AutoPlayer.LOGGER.info("Section:2");
                     debugInfo.SubHeading("ConvertNodeList");
@@ -152,10 +145,11 @@ public class PathFindingAlgo {
 
         @Override
         public void run() {
-            if (CheckedNodes.AddAllSurroundingNodes(BestLoc, X, Y, Z,getWF(),getBlockManager())) {
+            if (!AllNodes.AddAllSurroundingNodes(BestLoc, X, Y, Z, getWF(), getBlockManager())) {
+                section=0;
+            } else {
                 //section=2;
             }
-            else  section=0;
             RunningConcurrently = false;
             AddSurrounding = null;
             //AutoPlayer.LOGGER.info("addSurrounding Done");
@@ -174,7 +168,7 @@ public class PathFindingAlgo {
     public void FindPath(int x, int y, int z){
         X=x;Y=y;Z=z;
         try {
-            CheckedNodes.add(new Node(getPlayer()));
+            AllNodes.add(new Node(getPlayer()));
         }
         catch (Exception e) {
             getPlayer().sendMessage(Text.of(e.getMessage()), false);
@@ -213,9 +207,9 @@ public class PathFindingAlgo {
     private void ConvertAllNodeListIntoPathStack(){
         int currentloc = bestLoc;
         while(currentloc!=-1){
-            Node n = CheckedNodes.get(currentloc);
+            Node n = AllNodes.get(currentloc);
             PathStack.add(n);
-            currentloc = CheckedNodes.findIndex(n.Weight.PreviousBlock);
+            currentloc = AllNodes.findIndex(n.Weight.PreviousBlock);
             if(currentloc==0)currentloc=-1;
         }
 

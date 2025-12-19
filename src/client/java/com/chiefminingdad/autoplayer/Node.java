@@ -98,9 +98,7 @@ public class Node {
 
 
     public BlockPos[] getSurrounding() {
-        ArrayList<BlockPos> allSurrounding = new ArrayList<>() {
-        };
-
+        ArrayList<BlockPos> allSurrounding = new ArrayList<>() {};
         for (int dx = -1; dx < 2; dx++) {
             for (int dy = -1; dy < 2; dy++) {
                 for (int dz = -1; dz < 2; dz++) {
@@ -111,20 +109,6 @@ public class Node {
             }
         }
         return allSurrounding.toArray(BlockPos[]::new);
-    }
-
-    public ArrayList<Node> GetAllSurroundingNodes(int x, int y, int z, WeightFinder WF, BlockManager BM) {
-        BlockPos[] PotentialBlocks = getSurrounding();
-        ArrayList<Node> NewNodes = new ArrayList<>();//Todo add debugging logging using new function in DebugInfo
-
-        for (BlockPos Positions : PotentialBlocks) {
-            WeightInfo newWeight = findWeight(Positions, WF, BM);
-            float newHeuristicWeight = findHeuristicWeight(Positions, x, y, z);
-            Node n =new Node(Positions, Weight.append(newWeight, Pos), newHeuristicWeight);
-            NewNodes.add(n);
-            debugInfo.AddExtra(n.toString());
-        }
-        return NewNodes;
     }
 
     /**
@@ -178,95 +162,4 @@ public class Node {
     public static @NotNull Node worstNode() {
         return new Node(new BlockPos(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE), new WeightFinder.WorstWeight(), Float.MAX_VALUE);
     }
-
-
-
-    public static class AllNodeList extends ArrayList<com.chiefminingdad.autoplayer.Node> {
-        /**
-         * Iterates over the list finding the best Node.
-         * @return The index of the lowest weight node in the list that hasn't been checked yet.
-         */
-        public int GetBestLocation() {
-            Node BestNode = Node.worstNode();
-            int BestLoc = -1;
-            for (int i = 0; i < this.size(); i++) {
-                Node Current = this.get(i);
-                if ((Current.getTotalFWeight() < BestNode.getTotalFWeight())&!Current.checked) {
-                    BestNode = Current;
-                    BestLoc = i;
-                }
-            }
-            BestNode.checked = true;
-            return BestLoc;
-        }
-
-        /**
-         * Adds all the nodes around the node in the list with index centre.
-         *
-         * @param centre index of the block
-         * @param X      x of the desired location
-         * @param Y      y of the desired location
-         * @param Z      z of the desired location
-         * @param WF     WeightFinder class instance.
-         *
-         * @return
-         * If the algorithm couldn't find the state of a block.
-         */
-        public boolean AddAllSurroundingNodes(int centre, int X, int Y, int Z, WeightFinder WF,BlockManager BM) {
-            boolean CouldntFindABlock = false;
-            for (Node newNode : this.get(centre).GetAllSurroundingNodes(X, Y, Z, WF,BM)) {
-                //Checks if the chunk was completely unobtainable from the server.
-                if (newNode.Weight.isUnattainable()){CouldntFindABlock=true;continue;}
-                //Sees if the new one is better than the old if so, replaces it
-                if (this.contains(newNode)) {
-                    int oldNodeIndex = this.findIndex(newNode.Pos);
-                    Node oldNode = this.get(oldNodeIndex);
-                    if (oldNode.getFinalWeight()>newNode.getFinalWeight()){
-                        this.set(oldNodeIndex,newNode.setchecked(oldNode.checked));
-                    }
-                } else {
-                    this.add(newNode);
-                }
-            }
-            return CouldntFindABlock;
-        }
-
-        public void AddAllSurroundingNodes(int centre, @NotNull Vec3i Destined, WeightFinder WF,BlockManager BM) {
-            AddAllSurroundingNodes(centre, Destined.getX(), Destined.getY(), Destined.getZ(), WF,BM);
-        }
-
-        /**
-         * @param o The Node to check if it is in the list.
-         * @return Whether o is in the list.
-         */
-        public boolean contains(Node o) {
-            for (Node node : this) {
-                if (PosEquals(node.Pos , o.Pos)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        public boolean PosEquals(BlockPos pos1,BlockPos pos2){
-            return pos1.getX() == pos2.getX() & pos1.getY() == pos2.getY() & pos1.getZ() == pos2.getZ();
-        }
-        public int findIndex(BlockPos p){
-            for(int i = 0; i < this.size(); i++){
-                if(PosEquals(this.get(i).Pos, p)){
-                    return i;
-                }
-            }
-            return -1;
-        }
-        public int findIndex(Node o){
-            return findIndex(o.Pos);
-        }
-        public Node findNode(Node p){
-            return this.get(findIndex(p));
-        }
-        public Node findNode(BlockPos p){
-            return this.get(findIndex(p));
-        }
-    }
-
 }
