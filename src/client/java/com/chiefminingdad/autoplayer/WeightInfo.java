@@ -65,7 +65,8 @@ public class WeightInfo {
     }
 
     public float distanceFromPrevious(){
-        return MathHelper.sqrt((getPreviousBlock()!=null?(float) CurrentBlock.withY(0).getSquaredDistance(getPreviousBlock().withY(0)):0));
+        BlockPos prev = getPreviousBlock();
+        return (prev!=null?MathHelper.sqrt(((float) CurrentBlock.withY(0).getSquaredDistance(prev.withY(0)))) + Math.abs(CurrentBlock.getY()-prev.getY()):0);
     }
 
     public boolean isUnattainable() {
