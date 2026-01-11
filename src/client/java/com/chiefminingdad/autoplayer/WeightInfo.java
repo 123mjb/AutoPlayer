@@ -7,11 +7,11 @@ import org.jetbrains.annotations.NotNull;
 public class WeightInfo {
     ItemBlockBreakingSpeed TopBlock = null;
     ItemBlockBreakingSpeed BottomBlock = null;
-    float WalkingTime = -1.0F;
+    WalkingSpeed WalkingTime = new WalkingSpeed(-1.0F);
     BlockPos CurrentBlock = null;
     SimpleWeightInfo PreviousWeightInfo = null;
 
-    public WeightInfo(BlockPos pos,ItemBlockBreakingSpeed ItemSpeedTop, ItemBlockBreakingSpeed ItemSpeedBottom, float walkingTime) {
+    public WeightInfo(BlockPos pos,ItemBlockBreakingSpeed ItemSpeedTop, ItemBlockBreakingSpeed ItemSpeedBottom, WalkingSpeed walkingTime) {
         CurrentBlock = pos;
         TopBlock = ItemSpeedTop;
         BottomBlock = ItemSpeedBottom;
@@ -26,7 +26,7 @@ public class WeightInfo {
         return "WeightInfo{" +
                 "TopBlock=" + TopBlock.toString() +
                 ", BottomBlock=" + BottomBlock.toString() +
-                ", WalkingTime=" + WalkingTime +
+                ", WalkingTime=" + WalkingTime.getTime() +
                 (getPreviousBlock()!=null?", PreviousBlock=" + getPreviousBlock().toString():"")+
                 ", PreviousWeight=" + PreviousWeightInfo.TotalWeight +
                 '}';
@@ -36,7 +36,7 @@ public class WeightInfo {
         return (PreviousWeightInfo!=null?PreviousWeightInfo.TotalWeight:0F) + TopBlock.getFullSpeed() + BottomBlock.getFullSpeed() + getContinuousWalkingTime();
     }
 
-    public float getWalkingTime() {
+    public WalkingSpeed getWalkingTime() {
         return WalkingTime;
     }
     public float getPreviousWalkingTime(){
@@ -44,7 +44,7 @@ public class WeightInfo {
     }
 
     public float getContinuousWalkingTime(){
-        return distanceFromPrevious()*(getWalkingTime()+getPreviousWalkingTime())/2;
+        return distanceFromPrevious()*(getWalkingTime().getTime()+getPreviousWalkingTime())/2F;
     }
 
     public BlockPos getPreviousBlock() {
@@ -61,7 +61,7 @@ public class WeightInfo {
     }
 
     public SimpleWeightInfo makeSimple(){
-        return new SimpleWeightInfo(getWalkingTime(), getTotal(), CurrentBlock);
+        return new SimpleWeightInfo(getContinuousWalkingTime(), getTotal(), CurrentBlock);
     }
 
     public float distanceFromPrevious(){

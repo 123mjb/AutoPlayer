@@ -90,7 +90,7 @@ public class AllNodeList extends ArrayList<Node> {
             float newHeuristicWeight = Node.findHeuristicWeight(pos, x, y, z);
             Node n = new Node(pos, CentreNode.Weight.append(newWeight), newHeuristicWeight);
             NewNodes.add(n);
-            debugInfo.AddExtra(n.getWeight() +" "+n.HeuristicWeight);//n.toString());
+            debugInfo.AddExtra(n.getWeight() +" "+n.HeuristicWeight+" "+n.Weight.getContinuousWalkingTime());//n.toString());
         }
         return NewNodes;
     }

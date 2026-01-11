@@ -27,14 +27,14 @@ public class WeightFinder{
     private final Block HoneyBlock = Blocks.HONEY_BLOCK;
     private final Block SoulSand = Blocks.SOUL_SAND;
 
-    public float findWalkingWeight(BlockState block, BlockPos blockPos){
+    public WalkingSpeed findWalkingWeight(BlockState block, BlockPos blockPos){
         Block checkblock = block.getBlock();
-        if(checkblock==BlueIce)return 1/4.376F;
-        else if(checkblock==Ice|checkblock==FrostedIce|checkblock==PackedIce)return 1/4.157F;
-        else if(checkblock==SlimeBlock) return 1/3.04F;
-        else if(checkblock==HoneyBlock| checkblock== SoulSand) return 1/2.508F;
-        else if(checkblock == Blocks.AIR)return 10F;// Where to put Placing logic?
-        else return 1/4.317F;
+        if(checkblock==BlueIce)return new WalkingSpeed(1/4.376F);
+        else if(checkblock==Ice|checkblock==FrostedIce|checkblock==PackedIce)return new WalkingSpeed(1/4.157F);
+        else if(checkblock==SlimeBlock) return new WalkingSpeed(1/3.04F);
+        else if(checkblock==HoneyBlock| checkblock== SoulSand) return new WalkingSpeed(1/2.508F);
+        else if(checkblock == Blocks.AIR)return new WalkingSpeed(20F,true);// Where to put Placing logic?
+        else return new WalkingSpeed(1/4.317F);
     }
     public ItemBlockBreakingSpeed findMiningWeight(@NotNull BlockState block, BlockPos blockPos){
         Block checkblock= block.getBlock();
@@ -74,6 +74,10 @@ public class WeightFinder{
         @Override
         public float getTotal() {
             return 0.0F;
+        }
+        @Override
+        public float getContinuousWalkingTime(){
+            return 0F;
         }
     }
 
