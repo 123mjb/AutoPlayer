@@ -1,4 +1,4 @@
-package com.chiefminingdad.autoplayer;
+package com.chiefminingdad.autoplayer.managers;
 
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;

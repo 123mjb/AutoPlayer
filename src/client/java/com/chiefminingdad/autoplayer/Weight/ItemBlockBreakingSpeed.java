@@ -1,4 +1,4 @@
-package com.chiefminingdad.autoplayer;
+package com.chiefminingdad.autoplayer.Weight;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -25,7 +25,7 @@ public class ItemBlockBreakingSpeed{
 
     @Override
     public String toString() {
-        return "com.chiefminingdad.autoplayer.ItemBlockBreakingSpeed{" +
+        return "com.chiefminingdad.autoplayer.Weight.ItemBlockBreakingSpeed{" +
                 (Item!=null? ("Item=" + Item):"") +
                 (Blck!=null?(", Blck=" + Blck):"") +
                 (Player!=null?(", Player=" + Player):"") +

@@ -1,5 +1,8 @@
 package com.chiefminingdad.autoplayer;
 
+import com.chiefminingdad.autoplayer.Weight.WeightFinder;
+import com.chiefminingdad.autoplayer.Weight.WeightInfo;
+import com.chiefminingdad.autoplayer.managers.BlockManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;

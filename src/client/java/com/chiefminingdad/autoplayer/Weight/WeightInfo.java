@@ -1,4 +1,4 @@
-package com.chiefminingdad.autoplayer;
+package com.chiefminingdad.autoplayer.Weight;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;

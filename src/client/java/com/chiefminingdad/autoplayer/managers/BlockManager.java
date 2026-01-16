@@ -1,4 +1,4 @@
-package com.chiefminingdad.autoplayer;
+package com.chiefminingdad.autoplayer.managers;
 
 import com.chiefminingdad.autoplayer.records.ChunksC2SRequest;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

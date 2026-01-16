@@ -1,5 +1,7 @@
 package com.chiefminingdad.autoplayer;
 
+import com.chiefminingdad.autoplayer.managers.KeyBindingBuilder;
+import com.chiefminingdad.autoplayer.managers.PersonalCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;

@@ -1,11 +1,13 @@
 package com.chiefminingdad.autoplayer;
 
-import com.chiefminingdad.autoplayer.BlockManager.BlockGetter;
+import com.chiefminingdad.autoplayer.managers.BlockManager;
+import com.chiefminingdad.autoplayer.managers.BlockManager.BlockGetter;
+import com.chiefminingdad.autoplayer.Weight.WeightFinder;
+import com.chiefminingdad.autoplayer.Weight.WeightInfo;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,5 +1,6 @@
-package com.chiefminingdad.autoplayer;
+package com.chiefminingdad.autoplayer.managers;
 
+import com.chiefminingdad.autoplayer.CustomScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
@@ -8,12 +9,12 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
-import static com.chiefminingdad.autoplayer.KeyBindingBuilder.*;
+import static com.chiefminingdad.autoplayer.managers.KeyBindingBuilder.*;
 
 public class ScreenManager {
     KeyBindtoRunningCode keyBindingTest;
 
-    protected void init(){
+    public void init(){
 
         // make the keybind show the screen
         Consumer<KeyBinding> Code = keyBinding->{

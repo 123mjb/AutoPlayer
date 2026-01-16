@@ -1,4 +1,4 @@
-package com.chiefminingdad.autoplayer;
+package com.chiefminingdad.autoplayer.Weight;
 
 public class WalkingSpeed {
     final float Time;

@@ -1,5 +1,6 @@
 package com.chiefminingdad.autoplayer;
 
+import com.chiefminingdad.autoplayer.managers.KeyBindingBuilder;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.MinecraftClient;
@@ -11,8 +12,6 @@ import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.Stack;
 
 public class DebugInfo {
     boolean renderDebug = false;
@@ -29,7 +28,7 @@ public class DebugInfo {
     int black = 0xffffffff;
 
     public DebugInfo(){
-        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleDebug", GLFW.GLFW_KEY_K,true,"autoplayerdebug",keybinding-> {if(keybinding.wasPressed()){renderDebug = !renderDebug;}});
+        new KeyBindingBuilder.KeyBindtoRunningCode("ToggleDebug", GLFW.GLFW_KEY_K,true,"autoplayerdebug", keybinding-> {if(keybinding.wasPressed()){renderDebug = !renderDebug;}});
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Identifier.of(AutoPlayer.MOD_ID,"debuginfo"),this::render);
     }
     public void Heading(String text){

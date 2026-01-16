@@ -1,5 +1,7 @@
 package com.chiefminingdad.autoplayer;
 
+import com.chiefminingdad.autoplayer.Weight.WeightFinder;
+import com.chiefminingdad.autoplayer.managers.BlockManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;

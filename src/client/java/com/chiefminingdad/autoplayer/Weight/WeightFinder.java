@@ -1,5 +1,6 @@
-package com.chiefminingdad.autoplayer;
+package com.chiefminingdad.autoplayer.Weight;
 
+import com.chiefminingdad.autoplayer.managers.BlockManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

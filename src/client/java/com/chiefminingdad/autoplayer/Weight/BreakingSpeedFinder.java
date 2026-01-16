@@ -1,4 +1,4 @@
-package com.chiefminingdad.autoplayer;
+package com.chiefminingdad.autoplayer.Weight;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
