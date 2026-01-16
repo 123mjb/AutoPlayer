@@ -19,7 +19,7 @@ public class KeyBindingBuilder {
     }
     public static class KeyBindtoRunningCode{
         public final KeyBinding keyBinding;
-        KeyBindtoRunningCode(String name, int key,boolean keyboard, String category, Consumer<KeyBinding> code){
+        public KeyBindtoRunningCode(String name, int key, boolean keyboard, String category, Consumer<KeyBinding> code){
             keyBinding = KeyBindingBuilder.BuildKeyBind(name, keyboard,key,category);
 
             ClientTickEvents.END_CLIENT_TICK.register(client -> code.accept(keyBinding));
