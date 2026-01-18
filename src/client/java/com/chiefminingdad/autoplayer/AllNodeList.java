@@ -20,7 +20,6 @@ public class AllNodeList extends ArrayList<Node> {
     private void setMaxMinHeight() {
         World world = MinecraftClient.getInstance().world;
         if (world != null) {
-            assert world != null;
             BottomY = world.getBottomY();
             TopY = world.getBottomY() + world.getHeight();
         }
@@ -130,12 +129,17 @@ public class AllNodeList extends ArrayList<Node> {
     }
 
     public int findIndex(BlockPos p) {
-        for (int i = 0; i < this.size(); i++) {
-            if (PosEquals(this.get(i).Pos, p)) {
-                return i;
+        try {
+            for (int i = 0; i < this.size(); i++) {
+                if (PosEquals(this.get(i).Pos, p)) {
+                    return i;
+                }
             }
+            return -1;
+        } catch (Exception e) {
+            return -1;
         }
-        return -1;
+
     }
 
     public int findIndex(@NotNull Node o) {

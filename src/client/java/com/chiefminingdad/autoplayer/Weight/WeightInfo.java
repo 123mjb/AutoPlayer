@@ -5,13 +5,13 @@ import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
 public class WeightInfo {
-    ItemBlockBreakingSpeed TopBlock = null;
-    ItemBlockBreakingSpeed BottomBlock = null;
+    BreakingSpeedManager TopBlock = null;
+    BreakingSpeedManager BottomBlock = null;
     WalkingSpeed WalkingTime = new WalkingSpeed(-1.0F);
     BlockPos CurrentBlock = null;
     WeightInfo PreviousWeightInfo = null;
 
-    public WeightInfo(BlockPos pos,ItemBlockBreakingSpeed ItemSpeedTop, ItemBlockBreakingSpeed ItemSpeedBottom, WalkingSpeed walkingTime) {
+    public WeightInfo(BlockPos pos,BreakingSpeedManager ItemSpeedTop, BreakingSpeedManager ItemSpeedBottom, WalkingSpeed walkingTime) {
         CurrentBlock = pos;
         TopBlock = ItemSpeedTop;
         BottomBlock = ItemSpeedBottom;
@@ -73,16 +73,5 @@ public class WeightInfo {
 
     public boolean isUnattainable() {
         return false;
-    }
-
-    public static class SimpleWeightInfo {
-        final float WalkingTime;
-        final float TotalWeight;
-        final BlockPos Pos;
-        public SimpleWeightInfo(float walkingTime, float totalWeight, BlockPos pos){
-            WalkingTime = walkingTime;
-            TotalWeight = totalWeight;
-            Pos = pos;
-        }
     }
 }

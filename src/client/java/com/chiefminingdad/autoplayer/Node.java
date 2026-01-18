@@ -1,18 +1,21 @@
 package com.chiefminingdad.autoplayer;
 
+import com.chiefminingdad.autoplayer.Weight.BreakingSpeedManager;
 import com.chiefminingdad.autoplayer.managers.BlockManager;
 import com.chiefminingdad.autoplayer.Weight.WeightFinder;
 import com.chiefminingdad.autoplayer.Weight.WeightInfo;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 
 public class Node {
     public BlockPos Pos;
@@ -123,13 +126,17 @@ public class Node {
      * @return The weight information for that block.
      */
     public WeightInfo findWeight(@NotNull BlockPos pos, WeightFinder WF, BlockManager BM) {
-        ArrayList<BlockState> states = BM.getBlocks(new ArrayList<BlockPos>(Arrays.asList(pos.down(),pos,pos.up())));
+        ArrayList<BlockState> states = BM.getBlocks(new ArrayList<>(Arrays.asList(pos.down(), pos, pos.up())));
 
         if (states.contains(null)){
             return new WeightFinder.UnattainableWeight();
         }
 
-        return new WeightInfo(pos,WF.findMiningWeight(states.get(2),pos.up()),WF.findMiningWeight(states.get(1),pos),WF.findWalkingWeight(states.get(0),pos.down()));
+        MinecraftClient client = MinecraftClient.getInstance();
+        WorldView world = client.world;
+        PlayerEntity player = client.player;
+
+        return new WeightInfo(pos,new BreakingSpeedManager(world,player,pos.up(),BM),new BreakingSpeedManager(world,player,pos,BM),WF.findWalkingWeight(states.getFirst(),pos.down()));
     }
 
     public static float findHeuristicWeight(BlockPos nextBlock, int X, int Y, int Z) {

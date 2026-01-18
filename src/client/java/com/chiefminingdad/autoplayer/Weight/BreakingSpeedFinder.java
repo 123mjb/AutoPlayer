@@ -15,11 +15,11 @@ import java.util.Objects;
 
 public class BreakingSpeedFinder {
 
-    public boolean canHarvest(@NotNull BlockState state, ItemStack stack) {
+    public static boolean canHarvest(@NotNull BlockState state, ItemStack stack) {
         return !state.isToolRequired() || stack.isSuitableFor(state);
     }
 
-    public float getSimpleSpeed(BlockState block, ItemStack item, BlockPos pos){
+    public static float getSimpleSpeed(BlockState block, ItemStack item, BlockPos pos){
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
         ClientPlayerEntity player = client.player;
@@ -35,7 +35,7 @@ public class BreakingSpeedFinder {
         return f/i/h;
     }
 
-    public float getFullSpeed(BlockState block, ItemStack item, BlockPos pos){
+    public static float getFullSpeed(BlockState block, ItemStack item, BlockPos pos){
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
 
         float f = getSimpleSpeed(block, item, pos);

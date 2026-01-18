@@ -5,9 +5,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 
 public class WeightFinder{
@@ -37,14 +39,6 @@ public class WeightFinder{
         else if(checkblock == Blocks.AIR)return new WalkingSpeed(20F,true);// Where to put Placing logic?
         else return new WalkingSpeed(1/4.317F);
     }
-    public ItemBlockBreakingSpeed findMiningWeight(@NotNull BlockState block, BlockPos blockPos){
-        Block checkblock= block.getBlock();
-        if(checkblock == Blocks.AIR){
-            return new AirBreaking();
-        }else {
-            return getBestInventoryItemForBlock(Player.getInventory(), block, blockPos);
-        }
-    }
 
     public ItemBlockBreakingSpeed getBestInventoryItemForBlock(PlayerInventory inventory,BlockState block,BlockPos blockpos){
         ItemBlockBreakingSpeed Best = null;
@@ -56,9 +50,9 @@ public class WeightFinder{
         return Best;
     }
 
-    public static class AirBreaking extends  ItemBlockBreakingSpeed{
-        public AirBreaking() {
-
+    public static class AirBreaking extends  BreakingSpeedManager{
+        public AirBreaking(WorldView world, PlayerEntity player, BlockPos pos, BlockManager blockManager) {
+            super(world, player, pos, blockManager);
         }
 
         @Override

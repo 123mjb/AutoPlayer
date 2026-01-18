@@ -2,21 +2,17 @@ package com.chiefminingdad.autoplayer.managers;
 
 import com.chiefminingdad.autoplayer.records.ChunksC2SRequest;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
 
 public class BlockManager {
 
@@ -77,5 +73,8 @@ public class BlockManager {
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
+    }
+    public BlockState getBlock(BlockPos pos){
+        return getBlocks(new ArrayList<>(Collections.singletonList(pos))).getFirst();
     }
 }

@@ -132,7 +132,7 @@ public class MoveUntil {
         }
         else {
             if (player != null) {
-                if (fl%20<2) Algorithm.spawnParticlesOnPath(player.getEntityWorld());
+                if (fl%20<1) Algorithm.spawnParticlesOnPath(player.getEntityWorld());
             } else {
                 player = getInstance().player;
             }

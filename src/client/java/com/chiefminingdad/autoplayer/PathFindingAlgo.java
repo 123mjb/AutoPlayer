@@ -87,18 +87,11 @@ public class PathFindingAlgo {
     public boolean doPathFinding(){
             // TODO: Make it pause if a chunk is still being received. Should Do Now Check Code
             try {
-//                int npos = CheckedNodes.findIndex(new BlockPos(0,-60,1));
-//                if (npos != -1) {
-//                    Node n = CheckedNodes.get(npos);
-//                    debugInfo.ShowNode(n);
-//                }
                 if (section == 0) {
                     debugInfo.Heading("PathFindingAlgo: Section 0");
                     debugInfo.SubHeading("GetBestLocation");
                     bestLoc = AllNodes.GetBestLocation();//TODO:does it actually check if a node has already been used or update the weight when a better one is found
                     bestNode = AllNodes.get(bestLoc);
-//                    AutoPlayer.LOGGER.info("using {},Total:{},Distance:{}",bestNode.getTotalWeight(),bestNode.getWeight(),bestNode.DistanceWeight);
-//                    AutoPlayer.LOGGER.info("{},{},{}",bestNode.Pos.getX(),bestNode.Pos.getY(),bestNode.Pos.getZ());
                     debugInfo.SubHeading("BlockPosWorks");
                     if (BlockPosWorksForLoc(bestNode.Pos)){ section = 2;AutoPlayer.LOGGER.info("Finsiherd");}
                     else section = 1;
@@ -120,11 +113,11 @@ public class PathFindingAlgo {
                     }
                 }
                 if (section == 2) {
-
                     AutoPlayer.LOGGER.info(AllNodes.get(bestLoc).toString());
                     debugInfo.Heading("PathFindingAlgo: Section 2");
                     AutoPlayer.LOGGER.info("Section:2");
                     debugInfo.SubHeading("ConvertNodeList");
+
                     ConvertAllNodeListIntoPathStack();
 
                     PathBlocks = PathStack.toArray(PathBlocks);
