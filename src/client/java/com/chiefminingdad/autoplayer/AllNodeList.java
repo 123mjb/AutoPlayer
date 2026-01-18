@@ -83,7 +83,7 @@ public class AllNodeList extends ArrayList<Node> {
         setMaxMinHeight();
 
         BlockPos[] PotentialBlocks = CentreNode.getSurrounding();
-        ArrayList<Node> NewNodes = new ArrayList<>();//Todo add debugging logging using new function in DebugInfo
+        ArrayList<Node> NewNodes = new ArrayList<>();
 
         for (BlockPos pos : PotentialBlocks) {
             if (!(BottomY<pos.getY() & pos.getY()<TopY)) continue;

@@ -49,7 +49,5 @@ public class Registerer {
         else{
             ServerPlayNetworking.send(Player,new ChunksS2CConfirmation(false,p));
         }
-
-        //TODO: Make it send info that the player is not moderator.
     }
 }

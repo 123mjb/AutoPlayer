@@ -15,6 +15,10 @@ public class BreakingSpeedManager {
     PlayerEntity Player;
     BlockPos Pos;
     BlockManager BM;
+    int requests = 0;
+    float simple = -1F;
+    float full = -1F;
+    int AccuracyFactor = 80;
 
     public BreakingSpeedManager(WorldView world, PlayerEntity player, BlockPos pos, BlockManager blockManager){
         World = world;
@@ -37,16 +41,26 @@ public class BreakingSpeedManager {
     }
 
     public float getFullSpeed(){
-        BlockState state = BM.getBlock(Pos);
-        if(state.getBlock()== Blocks.AIR) return 0F;
-        Inventory inventory = Player.getInventory();
-        return BreakingSpeedFinder.getFullSpeed(state,inventory.getStack(getBestItem(state,inventory)),Pos);
+        if(requests == AccuracyFactor|full==-1F) {
+            requests=-1;
+            BlockState state = BM.getBlock(Pos);
+            if (state.getBlock() == Blocks.AIR) return 0F;
+            Inventory inventory = Player.getInventory();
+            full = BreakingSpeedFinder.getFullSpeed(state, inventory.getStack(getBestItem(state, inventory)), Pos);
+        }
+        requests++;
+        return full;
     }
 
     public float getSimpleSpeed(){
-        BlockState state = BM.getBlock(Pos);
-        if(state.getBlock()== Blocks.AIR) return 0F;
-        Inventory inventory = Player.getInventory();
-        return BreakingSpeedFinder.getSimpleSpeed(state,inventory.getStack(getBestItem(state,inventory)),Pos);
+        if (requests==AccuracyFactor|simple==-1F) {
+            requests=-1;
+            BlockState state = BM.getBlock(Pos);
+            if (state.getBlock() == Blocks.AIR) return 0F;
+            Inventory inventory = Player.getInventory();
+            simple = BreakingSpeedFinder.getSimpleSpeed(state, inventory.getStack(getBestItem(state, inventory)), Pos);
+        }
+        requests++;
+        return simple;
     }
 }

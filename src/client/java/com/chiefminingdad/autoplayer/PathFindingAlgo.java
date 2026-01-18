@@ -85,12 +85,11 @@ public class PathFindingAlgo {
      * Whether the algorithm has finished.
      */
     public boolean doPathFinding(){
-            // TODO: Make it pause if a chunk is still being received. Should Do Now Check Code
             try {
                 if (section == 0) {
                     debugInfo.Heading("PathFindingAlgo: Section 0");
                     debugInfo.SubHeading("GetBestLocation");
-                    bestLoc = AllNodes.GetBestLocation();//TODO:does it actually check if a node has already been used or update the weight when a better one is found
+                    bestLoc = AllNodes.GetBestLocation();
                     bestNode = AllNodes.get(bestLoc);
                     debugInfo.SubHeading("BlockPosWorks");
                     if (BlockPosWorksForLoc(bestNode.Pos)){ section = 2;AutoPlayer.LOGGER.info("Finsiherd");}

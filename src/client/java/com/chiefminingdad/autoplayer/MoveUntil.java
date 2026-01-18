@@ -11,6 +11,8 @@ import com.chiefminingdad.autoplayer.CustomClassHolder.*;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
+import java.nio.file.Path;
+
 import static com.chiefminingdad.autoplayer.AutoPlayerClient.debugInfo;
 
 public class MoveUntil {
@@ -119,6 +121,7 @@ public class MoveUntil {
         this.findPath = true;
     }
 
+    Thread PathFindingThread;
     float fl = 0;
     public void MoveCorrectDirection(MinecraftClient cl){
         fl++;
@@ -127,7 +130,13 @@ public class MoveUntil {
         }
         if (findPath){
             if (Move) {
-                findPath = !Algorithm.doPathFinding();
+                if(PathFindingThread==null){
+                    PathFindingThread = new Thread(new doPathFinding());
+                    PathFindingThread.start();
+                }
+                if (!PathFindingThread.isAlive()){
+                    PathFindingThread = null;
+                }
             }
         }
         else {
@@ -136,6 +145,15 @@ public class MoveUntil {
             } else {
                 player = getInstance().player;
             }
+        }
+    }
+
+    public class doPathFinding implements Runnable{
+        public doPathFinding(){}
+
+        @Override
+        public void run() {
+            findPath = !Algorithm.doPathFinding();
         }
     }
 }
