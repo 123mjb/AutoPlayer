@@ -1,7 +1,6 @@
 package com.chiefminingdad.autoplayer;
 
 import com.chiefminingdad.autoplayer.managers.BlockManager;
-import com.chiefminingdad.autoplayer.managers.BlockManager.BlockGetter;
 import com.chiefminingdad.autoplayer.Weight.WeightFinder;
 import com.chiefminingdad.autoplayer.Weight.WeightInfo;
 import net.minecraft.block.BlockState;
@@ -12,6 +11,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class Node {
@@ -21,10 +21,6 @@ public class Node {
     public float HeuristicWeight;
     public boolean checked = false;
 
-    public float getWeight() {
-        return Weight.getTotal();
-    }
-
     /**
      * Value to rank the Nodes on.
      *
@@ -33,10 +29,16 @@ public class Node {
     public float getTotalFWeight() {
         return Weight.getTotal() + HeuristicWeight;
     }
+
+    /**
+     * Total weight without heuristic, used for the basis of the weight for the next node in line.
+     * @return Total weight
+     */
     public float getFinalWeight() {
         return Weight.getTotal();
     }
-    public Node setchecked(boolean checked) {
+
+    public Node setChecked(boolean checked) {
         this.checked = checked;
         return this;
     }
@@ -121,33 +123,13 @@ public class Node {
      * @return The weight information for that block.
      */
     public WeightInfo findWeight(@NotNull BlockPos pos, WeightFinder WF, BlockManager BM) {
-        BlockGetter[] getters = new BlockGetter[]{new BlockGetter(pos.down(),BM), new BlockGetter(pos,BM), new BlockGetter(pos.up(),BM)};
-        BlockState[] blockStates = new BlockState[3];
-        Optional<Boolean> tryget;
-        while (blockStates[0] == null | blockStates[1] == null | blockStates[2] == null) {
-            tryget = getters[0].tryGet(BM.Unavailable);
-            if(tryget.isEmpty()) {
-                return new WeightFinder.UnattainableWeight();
-            }
-            if (tryget.get()) {
-                blockStates[0] = getters[0].getState();
-            }
-            tryget = getters[1].tryGet(BM.Unavailable);
-            if(tryget.isEmpty()) {
-                return new WeightFinder.UnattainableWeight();
-            }
-            if (tryget.get()) {
-                blockStates[1] = getters[1].getState();
-            }
-            tryget = getters[2].tryGet(BM.Unavailable);
-            if(tryget.isEmpty()) {
-                return new WeightFinder.UnattainableWeight();
-            }
-            if (tryget.get()) {
-                blockStates[2] = getters[2].getState();
-            }
+        ArrayList<BlockState> states = BM.getBlocks(new ArrayList<BlockPos>(Arrays.asList(pos.down(),pos,pos.up())));
+
+        if (states.contains(null)){
+            return new WeightFinder.UnattainableWeight();
         }
-        return new WeightInfo(pos,WF.findMiningWeight(blockStates[2],pos.up()),WF.findMiningWeight(blockStates[1],pos),WF.findWalkingWeight(blockStates[0],pos.down()));
+
+        return new WeightInfo(pos,WF.findMiningWeight(states.get(2),pos.up()),WF.findMiningWeight(states.get(1),pos),WF.findWalkingWeight(states.get(0),pos.down()));
     }
 
     public static float findHeuristicWeight(BlockPos nextBlock, int X, int Y, int Z) {

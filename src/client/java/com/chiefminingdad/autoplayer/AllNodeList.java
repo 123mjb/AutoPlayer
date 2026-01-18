@@ -67,7 +67,7 @@ public class AllNodeList extends ArrayList<Node> {
                 int oldNodeIndex = this.findIndex(newNode.Pos);
                 Node oldNode = this.get(oldNodeIndex);
                 if (oldNode.getFinalWeight() > newNode.getFinalWeight()) {
-                    this.set(oldNodeIndex, newNode.setchecked(oldNode.checked));
+                    this.set(oldNodeIndex, newNode.setChecked(oldNode.checked));
                 }
             } else {
                 this.add(newNode);
@@ -93,7 +93,7 @@ public class AllNodeList extends ArrayList<Node> {
             float newHeuristicWeight = Node.findHeuristicWeight(pos, x, y, z);
             Node n = new Node(pos, CentreNode.Weight.append(newWeight), newHeuristicWeight);
             NewNodes.add(n);
-            debugInfo.AddExtra(n.getWeight() +" "+n.HeuristicWeight+" "+n.Weight.getContinuousWalkingTime());//n.toString());
+            debugInfo.AddExtra(n.getFinalWeight() +" "+n.HeuristicWeight+" "+n.Weight.getContinuousWalkingTime());//n.toString());
         }
         return NewNodes;
     }

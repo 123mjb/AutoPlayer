@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 
-public class ItemBlockBreakingSpeed{
+public class  ItemBlockBreakingSpeed{
     ItemStack Item;
     BlockState Blck;
     WorldView World;

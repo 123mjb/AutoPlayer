@@ -9,7 +9,7 @@ public class WeightInfo {
     ItemBlockBreakingSpeed BottomBlock = null;
     WalkingSpeed WalkingTime = new WalkingSpeed(-1.0F);
     BlockPos CurrentBlock = null;
-    SimpleWeightInfo PreviousWeightInfo = null;
+    WeightInfo PreviousWeightInfo = null;
 
     public WeightInfo(BlockPos pos,ItemBlockBreakingSpeed ItemSpeedTop, ItemBlockBreakingSpeed ItemSpeedBottom, WalkingSpeed walkingTime) {
         CurrentBlock = pos;
@@ -28,19 +28,25 @@ public class WeightInfo {
                 ", BottomBlock=" + BottomBlock.toString() +
                 ", WalkingTime=" + WalkingTime.getTime() +
                 (getPreviousBlock()!=null?", PreviousBlock=" + getPreviousBlock().toString():"")+
-                ", PreviousWeight=" + PreviousWeightInfo.TotalWeight +
+                ", PreviousWeight=" + PreviousWeightInfo.getTotal() +
                 '}';
     }
 
+
+    /**
+     *
+     * @return All the previous node's weight plus the current one.
+     */
     public float getTotal() {
-        return (PreviousWeightInfo!=null?PreviousWeightInfo.TotalWeight:0F) + TopBlock.getFullSpeed() + BottomBlock.getFullSpeed() + getContinuousWalkingTime();
+        return (PreviousWeightInfo!=null?PreviousWeightInfo.getTotal():0F) + TopBlock.getFullSpeed() + BottomBlock.getFullSpeed() + getContinuousWalkingTime();
     }
 
     public WalkingSpeed getWalkingTime() {
         return WalkingTime;
     }
+
     public float getPreviousWalkingTime(){
-        return PreviousWeightInfo!=null?PreviousWeightInfo.WalkingTime:0F;
+        return PreviousWeightInfo!=null?PreviousWeightInfo.getWalkingTime().getTime():0F;
     }
 
     public float getContinuousWalkingTime(){
@@ -48,7 +54,7 @@ public class WeightInfo {
     }
 
     public BlockPos getPreviousBlock() {
-        return PreviousWeightInfo.Pos;
+        return PreviousWeightInfo.CurrentBlock;
     }
 
     public boolean lessThan(@NotNull WeightInfo other) {
@@ -56,12 +62,8 @@ public class WeightInfo {
     }
 
     public WeightInfo append(@NotNull WeightInfo newLocation) {
-        newLocation.PreviousWeightInfo = makeSimple();
+        newLocation.PreviousWeightInfo = this;
         return newLocation;
-    }
-
-    public SimpleWeightInfo makeSimple(){
-        return new SimpleWeightInfo(getContinuousWalkingTime(), getTotal(), CurrentBlock);
     }
 
     public float distanceFromPrevious(){
